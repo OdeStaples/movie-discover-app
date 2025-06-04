@@ -3,12 +3,12 @@
     <!-- Hero Text -->
     <div class="row">
       <div class="col-lg-6">
-        <h1 class="display-4 fw-bold mb-3">
+        <h1 class="display-2 fw-bold mb-3 position-relative">
           What <br />
           Should I Watch
-          <br />Tonight?
+          <br /><span class="highlight">Tonight?</span>
         </h1>
-        <p class="lead mb-4 text-light">Discover your next favorite movie</p>
+        <p class="lead mb-4 text-light">Discover your next favorite movie...</p>
       </div>
 
       <!-- Featured Movie Carousel -->
@@ -87,37 +87,40 @@
     </div>
 
     <!-- Mood Category Buttons -->
-    <div class="row mt-5">
-      <div class="col-12">
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-          <button
-            class="btn btn-outline-light btn-lg category-btn"
-            [class.btn-primary]="selectedCategory === 'feelGood'"
-            [class.btn-outline-light]="selectedCategory !== 'feelGood'"
-            (click)="selectCategory('feelGood')"
-          >
-            😊 Feel Good
-          </button>
+  </div>
+</section>
 
-          <button
-            class="btn btn-outline-light btn-lg category-btn"
-            [class.btn-primary]="selectedCategory === 'action'"
-            [class.btn-outline-light]="selectedCategory !== 'action'"
-            (click)="selectCategory('action')"
-          >
-            💥 Action
-          </button>
+<div class="container">
+  <div class="row mt-2">
+    <div class="col-12">
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <button
+          class="btn btn-outline-dark btn-lg category-btn"
+          [class.btn-primary]="selectedCategory === 'feelGood'"
+          [class.btn-outline-light]="selectedCategory !== 'feelGood'"
+          (click)="selectCategory('feelGood')"
+        >
+          😊 Feel Good
+        </button>
 
-          <button
-            class="btn btn-outline-light btn-lg category-btn"
-            [class.btn-primary]="selectedCategory === 'mindBender'"
-            [class.btn-outline-light]="selectedCategory !== 'mindBender'"
-            (click)="selectCategory('mindBender')"
-          >
-            🧠 Mind Benders
-          </button>
-        </div>
+        <button
+          class="btn btn-outline-dark btn-lg category-btn"
+          [class.btn-primary]="selectedCategory === 'action'"
+          [class.btn-outline-light]="selectedCategory !== 'action'"
+          (click)="selectCategory('action')"
+        >
+          💥 Action
+        </button>
+
+        <button
+          class="btn btn-outline-dark btn-lg category-btn"
+          [class.btn-primary]="selectedCategory === 'mindBender'"
+          [class.btn-outline-light]="selectedCategory !== 'mindBender'"
+          (click)="selectCategory('mindBender')"
+        >
+          🧠 Mind Benders
+        </button>
       </div>
     </div>
   </div>
-</section>
+</div>
