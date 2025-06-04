@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
-  inject,
   Input,
   OnDestroy,
   Output,
@@ -13,6 +12,7 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { SearchItem } from '../../models/search.model';
 import { SearchType } from '../../store/search/search.actions';
 import { Movie } from '../../models/movie.model';
+import { COMPARATORS, MOVIE_CONSTANTS } from '../../constants/movie.constants';
 
 @Component({
   selector: 'app-header',
@@ -24,6 +24,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private searchSubject = new Subject<string>();
 
+  movieConstants = MOVIE_CONSTANTS;
+  comparisionConstants = COMPARATORS;
   searchText = '';
   showDropdown = false;
   selectedIndex = -1;
@@ -57,8 +59,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  getContent(): string {
+    return `No ${
+      this.searchType === this.comparisionConstants.MOVIE
+        ? this.comparisionConstants.MOVIES
+        : this.comparisionConstants.PEOPLE
+    } found for ${this.searchText}`;
+  }
+
   getPlaceholder(): string {
-    return 'Search Movie, People...';
+    return this.movieConstants.PLACEHOLDER;
   }
 
   onSearchTypeChange(event: Event) {

@@ -4,7 +4,7 @@
   >
     <div class="col-md-2 d-flex justify-content-md-start logo">
       <img class="me-2" src="/logo.svg" alt="Logo" />
-      <h4 class="mb-0 text-white">MuviCoop</h4>
+      <h4 class="mb-0 text-white">{{ movieConstants.APP_TITLE }}</h4>
     </div>
     <div class="mx-4 position-relative search-container col-md-8">
       <div class="input-group">
@@ -14,8 +14,8 @@
           (change)="onSearchTypeChange($event)"
           id="searchType"
         >
-          <option value="movie">Movies</option>
-          <option value="person">People</option>
+          <option value="movie">{{ movieConstants.CAT_MOVIE }}</option>
+          <option value="person">{{ movieConstants.CAT_PEOPLE }}</option>
         </select>
 
         <input
@@ -47,9 +47,9 @@
             class="spinner-border spinner-border-sm text-light"
             role="status"
           >
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">{{ movieConstants.LOADING }}</span>
           </div>
-          <span class="ms-2">Searching...</span>
+          <span class="ms-2">{{ movieConstants.SEARCHING }}</span>
         </div>
 
         <div *ngIf="!loading && searchResults.length > 0">
@@ -83,9 +83,7 @@
           *ngIf="!loading && searchResults.length === 0 && searchText.length"
           class="p-3 text-center text-white"
         >
-          No {{ searchType === "movie" ? "movies" : "people" }} found for "{{
-            searchText
-          }}"
+          {{ getContent() }}
         </div>
       </div>
     </div>
