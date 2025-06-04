@@ -88,4 +88,8 @@ export class HomePage implements OnDestroy, AfterViewInit {
       // this.router.navigate(['/person', item.id]);
     }
   }
+
+  redirectToHome(): void {
+    this.router.navigate(['/home']);
+  }
 }

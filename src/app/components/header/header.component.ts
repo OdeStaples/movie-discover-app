@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Output() searchTypeUpdate = new EventEmitter<SearchType>();
   @Output() onClearSearch = new EventEmitter();
   @Output() selectedItem = new EventEmitter<SearchItem>();
+  @Output() redirectHome = new EventEmitter();
 
   ngOnInit() {
     // Set up debounced search
@@ -134,4 +135,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       return 'Actor/Director';
     }
   }
+
+  redirectToHome(): void {}
 }

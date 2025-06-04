@@ -2,7 +2,10 @@
   <div
     class="align-items-center container-fluid d-flex flex-row justify-content-between"
   >
-    <div class="col-md-2 d-flex justify-content-md-start logo">
+    <div
+      class="col-md-2 d-flex justify-content-md-start logo"
+      (click)="redirectToHome()"
+    >
       <img class="me-2" src="/movie-discover-app/logo.svg" alt="Logo" />
       <h4 class="mb-0 text-white">{{ movieConstants.APP_TITLE }}</h4>
     </div>
