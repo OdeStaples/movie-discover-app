@@ -57,7 +57,9 @@ export class MovieService {
   }
 
   getImageUrl(path: string, size: string = 'w500'): string {
-    return path ? `https://image.tmdb.org/t/p/${size}${path}` : '/no-image.png';
+    return path
+      ? `https://image.tmdb.org/t/p/${size}${path}`
+      : './no-image.png';
   }
 
   getBackdropUrl(path: string): string {
