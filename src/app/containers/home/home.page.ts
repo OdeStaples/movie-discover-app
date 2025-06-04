@@ -9,10 +9,17 @@ import { SearchType } from '../../store/search/search.actions';
 import * as SearchActions from '../../store/search/search.actions';
 import { SearchItem } from '../../models/search.model';
 import { combineLatest, Subject, takeUntil } from 'rxjs';
+import { HeroComponent } from '../../components/hero/hero.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterOutlet, FontAwesomeModule, HeaderComponent, CommonModule],
+  imports: [
+    RouterOutlet,
+    FontAwesomeModule,
+    HeaderComponent,
+    CommonModule,
+    HeroComponent,
+  ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
 })
@@ -58,8 +65,6 @@ export class HomePage implements OnDestroy, AfterViewInit {
 
   updateSearchInput(searchText: string): void {
     this.currentSearchText = searchText;
-    console.log('here');
-
     // Only search if there's actual text
     if (searchText.trim().length > 0) {
       if (this.currentSearchType.toLowerCase() === 'person') {

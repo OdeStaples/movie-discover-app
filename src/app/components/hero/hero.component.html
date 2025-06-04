@@ -1,0 +1,123 @@
+<section class="hero-section bg-dark text-white">
+  <div class="container py-5">
+    <!-- Hero Text -->
+    <div class="row">
+      <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-3">
+          What <br />
+          Should I Watch
+          <br />Tonight?
+        </h1>
+        <p class="lead mb-4 text-light">Discover your next favorite movie</p>
+      </div>
+
+      <!-- Featured Movie Carousel -->
+      <div class="col-lg-6">
+        <div class="featured-movie-container position-relative">
+          <div
+            *ngIf="featuredMovies.length > 0"
+            class="featured-movie-card rounded overflow-hidden shadow-lg"
+          >
+            <!-- Movie Backdrop -->
+            <div class="position-relative">
+              <img
+                [src]="
+                  movieService.getBackdropUrl(
+                    currentFeaturedMovie.backdrop_path
+                  )
+                "
+                [alt]="currentFeaturedMovie.title"
+                class="w-100"
+                style="height: 300px; object-fit: cover"
+                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiMzQTNBM0EiLz48cmVjdCB4PSIyNTAiIHk9IjEyNSIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI1MCIgZmlsbD0iIzY2NjY2NiIvPjwvc3ZnPg=='"
+              />
+
+              <!-- Overlay gradient -->
+              <div
+                class="position-absolute bottom-0 start-0 w-100 h-100"
+                style="
+                  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+                "
+              ></div>
+
+              <!-- Movie Info Overlay -->
+              <div
+                class="position-absolute bottom-0 start-0 p-3 text-white"
+                [style.opacity]="currentImageLoaded ? 1 : 0"
+                style="transition: opacity 0.3s ease"
+              >
+                <h5 class="mb-2">{{ currentFeaturedMovie.title }}</h5>
+                <div class="d-flex align-items-center mb-2">
+                  <span class="badge bg-warning text-dark me-2">
+                    ⭐
+                    {{ currentFeaturedMovie.vote_average | number : "1.1-1" }}
+                  </span>
+                  <small class="text-light">
+                    {{ getMovieYear(currentFeaturedMovie.release_date) }}
+                  </small>
+                </div>
+                <p class="mb-3 small text-light" style="max-width: 400px">
+                  {{ getTruncatedOverview(currentFeaturedMovie.overview) }}
+                </p>
+                <button
+                  class="btn btn-primary btn-sm"
+                  (click)="viewMovieDetails(currentFeaturedMovie.id)"
+                >
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Dots -->
+          <div
+            *ngIf="featuredMovies.length > 1"
+            class="carousel-dots d-flex justify-content-center mt-3"
+          >
+            <button
+              *ngFor="let movie of featuredMovies; let i = index"
+              class="dot me-2"
+              [class.active]="i === currentMovieIndex"
+              (click)="goToSlide(i)"
+              [attr.aria-label]="'Go to slide ' + (i + 1)"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mood Category Buttons -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <button
+            class="btn btn-outline-light btn-lg category-btn"
+            [class.btn-primary]="selectedCategory === 'feelGood'"
+            [class.btn-outline-light]="selectedCategory !== 'feelGood'"
+            (click)="selectCategory('feelGood')"
+          >
+            😊 Feel Good
+          </button>
+
+          <button
+            class="btn btn-outline-light btn-lg category-btn"
+            [class.btn-primary]="selectedCategory === 'action'"
+            [class.btn-outline-light]="selectedCategory !== 'action'"
+            (click)="selectCategory('action')"
+          >
+            💥 Action
+          </button>
+
+          <button
+            class="btn btn-outline-light btn-lg category-btn"
+            [class.btn-primary]="selectedCategory === 'mindBender'"
+            [class.btn-outline-light]="selectedCategory !== 'mindBender'"
+            (click)="selectCategory('mindBender')"
+          >
+            🧠 Mind Benders
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
