@@ -1,1 +1,100 @@
-<p>header works!</p>
+<header class="bg-dark text-white p-3">
+  <div
+    class="align-items-center container-fluid d-flex flex-row justify-content-between"
+  >
+    <div class="col-md-2 d-flex justify-content-md-start logo">
+      <img class="me-2" src="/logo.svg" alt="Logo" />
+      <h4 class="mb-0 text-white">MuviCoop</h4>
+    </div>
+    <div class="mx-4 position-relative search-container col-md-8">
+      <div class="input-group">
+        <select
+          class="form-select bg-dark text-white border-secondary type-dropdown"
+          [value]="searchType"
+          (change)="onSearchTypeChange($event)"
+          id="searchType"
+        >
+          <option value="movie">Movies</option>
+          <option value="person">People</option>
+        </select>
+
+        <input
+          type="text"
+          class="form-control text-muted border-secondary"
+          [placeholder]="getPlaceholder()"
+          [(ngModel)]="searchText"
+          (input)="onSearchInput($event)"
+          (focus)="onInputFocus()"
+          (blur)="onInputBlur()"
+        />
+
+        <button
+          *ngIf="searchText.length"
+          class="btn btn-outline-secondary"
+          type="button"
+          (click)="clearSearch()"
+        >
+          ×
+        </button>
+      </div>
+
+      <div
+        *ngIf="showDropdown && searchText.length"
+        class="search-dropdown position-absolute w-100 bg-dark border border-secondary rounded-bottom shadow-lg"
+      >
+        <div *ngIf="loading" class="p-3 text-center">
+          <div
+            class="spinner-border spinner-border-sm text-light"
+            role="status"
+          >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <span class="ms-2">Searching...</span>
+        </div>
+
+        <div *ngIf="!loading && searchResults.length > 0">
+          <div
+            *ngFor="let item of searchResults; let i = index"
+            class="search-result-item p-2 border-bottom border-secondary"
+            [class.bg-secondary]="i === selectedIndex"
+            (mousedown)="selectItem(item)"
+            (mouseenter)="selectedIndex = i"
+          >
+            <div class="d-flex align-items-center">
+              <div class="me-3">
+                <img
+                  [src]="getItemImage(item)"
+                  [alt]="getItemTitle(item)"
+                  class="rounded image-details"
+                  onerror="this.src='/no-image.png'"
+                />
+              </div>
+
+              <div class="flex-grow-1">
+                <h6 class="mb-1 text-white">{{ getItemTitle(item) }}</h6>
+                <small class="text-white">
+                  {{ getItemSubtitle(item) }}
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="!loading && searchResults.length === 0 && searchText.length"
+          class="p-3 text-center text-white"
+        >
+          No {{ searchType === "movie" ? "movies" : "people" }} found for "{{
+            searchText
+          }}"
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1 d-flex justify-content-end profile">
+      <div
+        class="bg-primary rounded-circle d-flex align-items-center justify-content-center user-profile"
+      >
+        👤
+      </div>
+    </div>
+  </div>
+</header>

@@ -9,13 +9,20 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('./containers/home/home.component').then((c) => c.HomeComponent),
+      import('./containers/home/home.page').then((c) => c.HomePage),
   },
   {
     path: 'movie/:id',
     loadComponent: () =>
-      import('./containers/movie-detail/movie-detail.component').then(
-        (c) => c.MovieDetailComponent
+      import('./containers/movie-detail/movie-detail.page').then(
+        (c) => c.MovieDetailPage
+      ),
+  },
+  {
+    path: 'person/:id',
+    loadComponent: () =>
+      import('./containers/people-detail/people-detail.page').then(
+        (c) => c.PeopleDetailPage
       ),
   },
   { path: '**', redirectTo: '/home' },

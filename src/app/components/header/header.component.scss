@@ -1,0 +1,38 @@
+.search-dropdown {
+  border-top: none !important;
+}
+
+.search-result-item {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+  background-color: rgba(108, 117, 125, 0.5) !important;
+}
+
+.search-result-item:last-child {
+  border-bottom: none !important;
+}
+
+.type-dropdown {
+  max-width: 120px;
+}
+
+.search-dropdown {
+  top: 100%; 
+  z-index: 1000; 
+  max-height: 400px; 
+  overflow-y: auto
+}
+
+.image-details {
+  width: 50px; 
+  height: 75px; 
+  object-fit: cover
+}
+
+.user-profile {
+  width: 40px; 
+  height: 40px
+}

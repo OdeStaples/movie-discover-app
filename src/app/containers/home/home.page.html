@@ -1,0 +1,11 @@
+<app-header
+  [searchType]="currentSearchType"
+  [loading]="searchLoading$ | async"
+  [movieResults]="movieResults$ | async"
+  [actorResults]="actorResults$ | async"
+  [searchResults]="searchResults"
+  (currentSearch)="updateSearchInput($event)"
+  (searchTypeUpdate)="updateSearchType($event)"
+  (onClearSearch)="clearSearch()"
+  (selectedItem)="navigateToSelection($event)"
+/>
