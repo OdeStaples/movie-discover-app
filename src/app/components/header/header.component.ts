@@ -118,7 +118,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const imagePath = item.poster_path || item.profile_path;
     return imagePath
       ? `https://image.tmdb.org/t/p/w92${imagePath}`
-      : './no-image.png';
+      : '/movie-discover-app/no-image.png';
   }
 
   getItemTitle(item: SearchItem): string {
