@@ -4,19 +4,15 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject, takeUntil } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faHeart,
-  faChevronLeft,
-  faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import * as WatchlistSelectors from '../../store/watchlist/watchlist.selectors';
-import * as WatchlistActions from '../../store/watchlist/watchlist.actions';
 import { Movie } from '../../models/movie.model';
 import { MovieService } from '../../services/movie.service';
+import { MovieCardComponent } from '../movie-card/movie-card.component';
 
 @Component({
   selector: 'app-watchlist-section',
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, MovieCardComponent],
   templateUrl: './watchlist-section.component.html',
   styleUrl: './watchlist-section.component.scss',
 })
@@ -28,14 +24,10 @@ export class WatchlistSectionComponent implements OnInit, OnDestroy {
 
   // Font Awesome icons
   faHeart = faHeart;
-  faChevronLeft = faChevronLeft;
-  faChevronRight = faChevronRight;
 
   // Component state
   watchlistMovies: Movie[] = [];
-  currentIndex = 0;
-  itemsPerView = 6;
-  scrollOffset = 0;
+  showAll = false;
 
   ngOnInit() {
     this.store
@@ -43,94 +35,38 @@ export class WatchlistSectionComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((movies) => {
         this.watchlistMovies = movies;
-        this.currentIndex = 0;
-        this.updateScrollOffset();
+        this.showAll = false; // Reset when movies change
       });
-
-    // Adjust items per view based on screen size
-    this.updateItemsPerView();
-    window.addEventListener('resize', () => this.updateItemsPerView());
   }
 
-  get visibleMovies(): Movie[] {
-    return this.watchlistMovies.slice(
-      this.currentIndex,
-      this.currentIndex + this.itemsPerView
-    );
+  get displayedMovies(): Movie[] {
+    if (this.showAll) {
+      return this.watchlistMovies;
+    }
+    return this.watchlistMovies.slice(0, 6); // Show first 6 movies by default
   }
 
-  get maxIndex(): number {
-    return Math.max(0, this.watchlistMovies.length - this.itemsPerView);
-  }
+  toggleViewAll(): void {
+    this.showAll = !this.showAll;
 
-  get currentPage(): number {
-    return Math.floor(this.currentIndex / this.itemsPerView);
-  }
-
-  get scrollPages(): number[] {
-    const totalPages = Math.ceil(
-      this.watchlistMovies.length / this.itemsPerView
-    );
-    return Array.from({ length: totalPages }, (_, i) => i);
-  }
-
-  scrollLeft() {
-    if (this.currentIndex > 0) {
-      this.currentIndex = Math.max(0, this.currentIndex - this.itemsPerView);
-      this.updateScrollOffset();
+    if (this.showAll) {
+      // Scroll to ensure all movies are visible
+      setTimeout(() => {
+        const element = document.querySelector('.watchlist-section');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
   }
 
-  scrollRight() {
-    if (this.currentIndex < this.maxIndex) {
-      this.currentIndex = Math.min(
-        this.maxIndex,
-        this.currentIndex + this.itemsPerView
-      );
-      this.updateScrollOffset();
-    }
-  }
+  getSectionSubtitle(): string {
+    const movieCount = this.watchlistMovies.length;
+    const displayCount = this.displayedMovies.length;
 
-  goToPage(pageIndex: number) {
-    this.currentIndex = pageIndex * this.itemsPerView;
-    this.updateScrollOffset();
-  }
-
-  private updateScrollOffset() {
-    const cardWidth = window.innerWidth <= 768 ? 156 : 196; // includes margin
-    this.scrollOffset = -this.currentIndex * cardWidth;
-  }
-
-  private updateItemsPerView() {
-    const width = window.innerWidth;
-    if (width <= 576) {
-      this.itemsPerView = 2;
-    } else if (width <= 768) {
-      this.itemsPerView = 3;
-    } else if (width <= 1200) {
-      this.itemsPerView = 4;
-    } else {
-      this.itemsPerView = 6;
-    }
-    this.updateScrollOffset();
-  }
-
-  removeFromWatchlist(movie: Movie, event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.store.dispatch(
-      WatchlistActions.removeFromWatchlist({ movieId: movie.id })
-    );
-  }
-
-  viewMovieDetails(movieId: number) {
-    this.router.navigate(['/movie', movieId]);
-  }
-
-  viewAllWatchlist() {
-    // Navigate to a dedicated watchlist page or show modal
-    // For now, we'll scroll to show more
-    this.router.navigate(['/watchlist']); // You can create this route later
+    return `${movieCount} movie${movieCount !== 1 ? 's' : ''} saved for later${
+      !this.showAll && movieCount > 6 ? ` (showing ${displayCount})` : ''
+    }`;
   }
 
   exploreMovies() {
@@ -141,19 +77,8 @@ export class WatchlistSectionComponent implements OnInit, OnDestroy {
     }
   }
 
-  getMovieYear(releaseDate: string): string {
-    return releaseDate
-      ? new Date(releaseDate).getFullYear().toString()
-      : 'Unknown';
-  }
-
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-    window.removeEventListener('resize', () => this.updateItemsPerView());
-  }
-
-  getImagePath(movie: Movie): string {
-    return this.movieService.getImageUrl(movie.poster_path, 'w342');
   }
 }

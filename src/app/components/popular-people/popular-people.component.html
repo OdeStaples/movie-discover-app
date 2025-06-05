@@ -1,4 +1,4 @@
-<section class="popular-people-section py-5 bg-light">
+<section class="popular-people-section py-4 bg-light">
   <div class="container">
     <!-- Section Header -->
     <div class="row mb-4">
@@ -10,36 +10,16 @@
               Popular Celebrities
             </h3>
             <p class="text-muted mb-0">
-              Trending actors, directors, and creators
+              {{ getSectionSubtitle() }}
             </p>
           </div>
-          <div class="d-flex align-items-center gap-2">
-            <!-- Scroll Controls -->
-            <button
-              *ngIf="people.length > itemsPerView"
-              class="btn btn-outline-secondary btn-sm"
-              [disabled]="currentIndex === 0"
-              (click)="scrollLeft()"
-            >
-              <fa-icon [icon]="faChevronLeft"></fa-icon>
-            </button>
-            <button
-              *ngIf="people.length > itemsPerView"
-              class="btn btn-outline-secondary btn-sm"
-              [disabled]="currentIndex >= maxIndex"
-              (click)="scrollRight()"
-            >
-              <fa-icon [icon]="faChevronRight"></fa-icon>
-            </button>
-            <!-- View All Button -->
-            <button
-              *ngIf="people.length > 0"
-              class="btn btn-outline-primary btn-sm"
-              (click)="viewAllPeople()"
-            >
-              View All
-            </button>
-          </div>
+          <button
+            *ngIf="people.length > 6"
+            class="btn btn-outline-primary"
+            (click)="toggleViewAll()"
+          >
+            {{ showAll ? "Show Less" : "View All" }}
+          </button>
         </div>
       </div>
     </div>
@@ -47,12 +27,12 @@
     <!-- Loading State -->
     <div *ngIf="loading" class="row">
       <div class="col-12">
-        <div class="d-flex justify-content-center py-4">
+        <div class="d-flex justify-content-center align-items-center py-5">
           <div class="text-center">
-            <div class="spinner-border text-primary mb-2" role="status">
-              <span class="visually-hidden">Loading...</span>
+            <div class="spinner-border text-primary mb-3" role="status">
+              <span class="visually-hidden">Loading celebrities...</span>
             </div>
-            <p class="text-muted mb-0">Loading popular celebrities...</p>
+            <p class="text-muted">Loading popular celebrities...</p>
           </div>
         </div>
       </div>
@@ -61,7 +41,8 @@
     <!-- Error State -->
     <div *ngIf="error && !loading" class="row">
       <div class="col-12">
-        <div class="alert alert-warning text-center">
+        <div class="alert alert-warning text-center" role="alert">
+          <h5 class="alert-heading">Oops! Something went wrong</h5>
           <p class="mb-2">Unable to load popular celebrities</p>
           <button class="btn btn-outline-warning btn-sm" (click)="loadPeople()">
             Try Again
@@ -71,95 +52,38 @@
     </div>
 
     <!-- People Grid -->
-    <div
-      *ngIf="!loading && !error && people.length > 0"
-      class="people-scroll-container"
-    >
+    <div *ngIf="!loading && !error && people.length > 0" class="row">
       <div
-        class="row flex-nowrap"
-        [style.transform]="'translateX(' + scrollOffset + 'px)'"
+        *ngFor="let person of displayedPeople; let i = index"
+        class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4"
+        [style.animation-delay]="i * 100 + 'ms'"
       >
-        <div
-          *ngFor="let person of visiblePeople; let i = index"
-          class="col-auto people-item"
-          [style.animation-delay]="i * 100 + 'ms'"
+        <app-person-card
+          [person]="person"
+          [showQuickActions]="true"
+          class="fade-in-up"
         >
-          <div class="person-card" (click)="viewPersonDetails(person.id)">
-            <!-- Person Photo -->
-            <div class="photo-container position-relative">
-              <img
-                [src]="getPersonImage(person.profile_path)"
-                [alt]="person.name"
-                class="person-photo"
-                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNzUiIGN5PSI3NSIgcj0iNzUiIGZpbGw9IiMzQTNBM0EiLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjYwIiByPSIyNSIgZmlsbD0iIzY2NjY2NiIvPjxwYXRoIGQ9Ik0zMCAxMjBDMzAgMTA1IDUwIDk1IDc1IDk1Uzk1IDEwNSAxMjAgMTIwIiBmaWxsPSIjNjY2NjY2Ii8+PC9zdmc+'"
-              />
-
-              <!-- Popularity Badge -->
-              <div class="popularity-badge position-absolute top-0 end-0 m-2">
-                <span class="badge bg-primary">
-                  <fa-icon [icon]="faStar" class="me-1"></fa-icon>
-                  {{ getPopularityScore(person.popularity) }}
-                </span>
-              </div>
-
-              <!-- Hover Overlay -->
-              <div
-                class="hover-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-              >
-                <div class="text-center text-white">
-                  <p class="mb-1">
-                    <fa-icon [icon]="faUser" class="me-1"></fa-icon>
-                    {{ person.known_for_department }}
-                  </p>
-                  <small>Click to view details</small>
-                </div>
-              </div>
-            </div>
-
-            <!-- Person Info -->
-            <div class="person-info p-3">
-              <h6 class="person-name mb-1" [title]="person.name">
-                {{ person.name }}
-              </h6>
-              <small class="text-muted d-block mb-2">{{
-                person.known_for_department
-              }}</small>
-
-              <!-- Known For Movies -->
-              <div
-                *ngIf="person.known_for && person.known_for.length > 0"
-                class="known-for"
-              >
-                <small class="text-muted">Known for:</small>
-                <div class="known-for-list mt-1">
-                  <span
-                    *ngFor="
-                      let item of person.known_for.slice(0, 2);
-                      let last = last
-                    "
-                    class="known-for-item"
-                  >
-                    {{ getKnownForTitle(item) }}<span *ngIf="!last">, </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </app-person-card>
       </div>
     </div>
 
-    <!-- Scroll Indicators -->
-    <div
-      *ngIf="people.length > itemsPerView"
-      class="scroll-indicators d-flex justify-content-center mt-3"
-    >
-      <div
-        *ngFor="let page of scrollPages; let i = index"
-        class="indicator"
-        [class.active]="i === currentPage"
-        (click)="goToPage(i)"
-      ></div>
+    <!-- No People State -->
+    <div *ngIf="!loading && !error && people.length === 0" class="row">
+      <div class="col-12">
+        <div class="text-center py-5">
+          <div class="mb-3">
+            <fa-icon
+              [icon]="faUser"
+              class="text-muted"
+              style="font-size: 4rem"
+            ></fa-icon>
+          </div>
+          <h4 class="text-muted mb-2">No celebrities found</h4>
+          <p class="text-muted">
+            We couldn't load any popular celebrities right now.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
