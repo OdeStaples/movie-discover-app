@@ -1,1 +1,0 @@
-import{Eb as n,ab as i,qb as a,rb as o}from"./chunk-TKP7YOEI.js";var l=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=i({type:t,selectors:[["app-movie-detail"]],decls:2,vars:0,template:function(e,m){e&1&&(a(0,"p"),n(1,"movie-detail works!"),o())},encapsulation:2})};export{l as MovieDetailPage};
