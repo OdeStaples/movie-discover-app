@@ -16,7 +16,9 @@ export class MovieService {
   }
 
   getMovieDetails(id: number): Observable<Movie> {
-    return this.http.get<Movie>(`${this.baseUrl}/movie/${id}`);
+    return this.http.get<Movie>(
+      `${this.baseUrl}/movie/${id}?append_to_response=credits,reviews,videos,images`
+    );
   }
 
   searchMovies(query: string): Observable<ApiResponse<Movie>> {
@@ -57,9 +59,7 @@ export class MovieService {
   }
 
   getImageUrl(path: string, size: string = 'w500'): string {
-    return path
-      ? `https://image.tmdb.org/t/p/${size}${path}`
-      : '/movie-discover-app/no-image.png';
+    return path ? `https://image.tmdb.org/t/p/${size}${path}` : '/no-image.png';
   }
 
   getBackdropUrl(path: string): string {
@@ -68,5 +68,16 @@ export class MovieService {
 
   getPopularPeople(): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.baseUrl}/person/popular`);
+  }
+
+  getPersonDetails(personId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/person/${personId}`);
+  }
+
+  // Get person movie/TV credits
+  getPersonCredits(personId: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/person/${personId}/movie_credits`
+    );
   }
 }

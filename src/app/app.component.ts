@@ -15,6 +15,8 @@ import { SearchItem } from './models/search.model';
 import { HeaderComponent } from './components/header/header.component';
 import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { faBug } from '@fortawesome/free-solid-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +34,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   currentSearchType: SearchType = 'movie';
   currentSearchText = '';
   searchResults: SearchItem[] = [];
+
+  faBug = faBug;
+  faGithub = faGithub;
 
   ngAfterViewInit(): void {
     combineLatest([this.movieResults$, this.actorResults$])

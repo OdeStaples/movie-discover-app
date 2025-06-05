@@ -1,1 +1,584 @@
-<p>movie-detail works!</p>
+<div class="movie-detail-container" *ngIf="!loading && !error && movie">
+  <!-- Hero Section -->
+  <section class="movie-hero position-relative">
+    <!-- Backdrop Image -->
+    <div class="backdrop-container">
+      <img
+        [src]="getBackdropUrl()"
+        [alt]="movie.title"
+        class="backdrop-image w-100"
+        onerror="this.style.display='none'"
+      />
+      <div class="backdrop-overlay"></div>
+    </div>
+
+    <!-- Movie Info Overlay -->
+    <div class="container position-relative">
+      <div class="row align-items-center min-vh-50">
+        <div class="col-lg-4 col-md-5">
+          <!-- Movie Poster -->
+          <div class="poster-container">
+            <img
+              [src]="getPosterUrl()"
+              [alt]="movie.title"
+              class="movie-poster rounded shadow-lg"
+              onerror="this.src='//movie-discover-app/no-image.png'"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-8 col-md-7">
+          <!-- Movie Details -->
+          <div class="movie-info text-white p-4">
+            <h1 class="movie-title mb-3">{{ movie.title }}</h1>
+
+            <!-- Tagline -->
+            <p
+              *ngIf="movie.tagline"
+              class="tagline text-warning mb-3 fst-italic"
+            >
+              "{{ movie.tagline }}"
+            </p>
+
+            <!-- Rating and Basic Info -->
+            <div class="movie-meta d-flex flex-wrap align-items-center mb-3">
+              <span class="badge bg-warning text-dark me-3 fs-6">
+                <fa-icon [icon]="faStar" class="me-1"></fa-icon>
+                {{ movie.vote_average | number : "1.1-1" }}
+                <small>({{ movie.vote_count | number }} votes)</small>
+              </span>
+              <span class="text-light me-3">{{ getMovieYear() }}</span>
+              <span class="text-light me-3" *ngIf="movie.runtime">
+                {{ formatRuntime(movie.runtime) }}
+              </span>
+              <span class="badge bg-secondary me-2" *ngIf="movie.status">
+                {{ movie.status }}
+              </span>
+              <span *ngIf="movie.imdb_id" class="me-3">
+                <a
+                  [href]="'https://www.imdb.com/title/' + movie.imdb_id"
+                  target="_blank"
+                  class="text-warning text-decoration-none"
+                >
+                  <fa-icon [icon]="faExternalLink" class="me-1"></fa-icon>
+                  IMDb
+                </a>
+              </span>
+            </div>
+
+            <!-- Genres -->
+            <div
+              class="genres mb-3"
+              *ngIf="movie.genres && movie.genres.length > 0"
+            >
+              <span
+                *ngFor="let genre of movie.genres"
+                class="badge border me-2 mb-2"
+              >
+                {{ genre.name }}
+              </span>
+            </div>
+
+            <!-- Overview -->
+            <p class="movie-overview lead mb-4" *ngIf="movie.overview">
+              {{ movie.overview }}
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons d-flex flex-wrap gap-3">
+              <button
+                class="btn btn-primary btn-lg"
+                (click)="toggleWatchlist()"
+              >
+                <fa-icon
+                  [icon]="isInWatchlist ? faHeart : faHeartOutline"
+                  class="me-2"
+                ></fa-icon>
+                {{ isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'
+                }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Details Section -->
+  <section class="movie-details bg-light py-5">
+    <div class="container">
+      <!-- Navigation Tabs -->
+      <ul class="nav nav-tabs mb-4" id="movieTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'overview'"
+            (click)="setActiveTab('overview')"
+            type="button"
+          >
+            Overview
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'cast'"
+            (click)="setActiveTab('cast')"
+            type="button"
+          >
+            Cast ({{ getCastMembers().length }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'crew'"
+            (click)="setActiveTab('crew')"
+            type="button"
+          >
+            Crew ({{ getCrewMembers().length }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'reviews'"
+            (click)="setActiveTab('reviews')"
+            type="button"
+          >
+            Reviews ({{ getReviews().length }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'media'"
+            (click)="setActiveTab('media')"
+            type="button"
+          >
+            Trailers
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Overview Tab -->
+        <div *ngIf="activeTab === 'overview'" class="tab-pane fade show active">
+          <div class="row">
+            <div class="col-md-8">
+              <h3 class="mb-3">Movie Details</h3>
+              <div class="movie-details-grid">
+                <div class="detail-item" *ngIf="movie.budget">
+                  <strong>Budget:</strong> {{ formatCurrency(movie.budget) }}
+                </div>
+                <div class="detail-item" *ngIf="movie.revenue">
+                  <strong>Revenue:</strong> {{ formatCurrency(movie.revenue) }}
+                </div>
+                <div class="detail-item" *ngIf="movie.release_date">
+                  <strong>Release Date:</strong> {{
+                  formatDate(movie.release_date) }}
+                </div>
+                <div class="detail-item" *ngIf="movie.runtime">
+                  <strong>Runtime:</strong> {{ formatRuntime(movie.runtime) }}
+                </div>
+                <div class="detail-item" *ngIf="movie.status">
+                  <strong>Status:</strong> {{ movie.status }}
+                </div>
+                <div class="detail-item" *ngIf="movie.original_language">
+                  <strong>Original Language:</strong> {{
+                  movie.original_language.toUpperCase() }}
+                </div>
+                <div class="detail-item" *ngIf="movie.popularity">
+                  <strong>Popularity:</strong> {{ movie.popularity | number :
+                  "1.1-1" }}
+                </div>
+              </div>
+
+              <!-- Collection Info -->
+              <div
+                *ngIf="movie.belongs_to_collection"
+                class="collection-info mt-4"
+              >
+                <h4 class="mb-3">Part of Collection</h4>
+                <div
+                  class="collection-card d-flex align-items-center p-3 bg-white rounded shadow-sm"
+                >
+                  <img
+                    *ngIf="movie.belongs_to_collection.poster_path"
+                    [src]="getCollectionPosterUrl(movie.belongs_to_collection.poster_path)"
+                    [alt]="movie.belongs_to_collection.name"
+                    class="collection-poster me-3"
+                  />
+                  <div>
+                    <h5 class="mb-1">{{ movie.belongs_to_collection.name }}</h5>
+                    <p class="text-muted mb-0">Movie Collection</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <h4
+                class="mb-3"
+                *ngIf="movie.production_companies && movie.production_companies.length > 0"
+              >
+                Production Companies
+              </h4>
+              <div class="production-companies">
+                <div
+                  *ngFor="let company of movie.production_companies"
+                  class="company-item d-flex align-items-center mb-3 p-2 bg-white rounded"
+                >
+                  <img
+                    *ngIf="company.logo_path"
+                    [src]="getCompanyLogoUrl(company.logo_path)"
+                    [alt]="company.name"
+                    class="company-logo me-3"
+                    onerror="this.style.display='none'"
+                  />
+                  <div>
+                    <span class="fw-medium">{{ company.name }}</span>
+                    <small class="text-muted d-block"
+                      >{{ company.origin_country }}</small
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Spoken Languages -->
+              <div
+                *ngIf="movie.spoken_languages && movie.spoken_languages.length > 0"
+                class="mt-4"
+              >
+                <h5 class="mb-3">Spoken Languages</h5>
+                <div class="languages">
+                  <span
+                    *ngFor="let language of movie.spoken_languages"
+                    class="badge bg-secondary me-2 mb-2"
+                  >
+                    {{ language.english_name }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cast Tab -->
+        <div *ngIf="activeTab === 'cast'" class="tab-pane fade show active">
+          <h3 class="mb-4">Cast</h3>
+          <div class="row" *ngIf="getCastMembers().length > 0; else noCast">
+            <div
+              *ngFor="let castMember of getDisplayedCast(); let i = index"
+              class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4"
+            >
+              <div class="cast-card h-100">
+                <div class="cast-photo">
+                  <img
+                    [src]="getPersonImageUrl(castMember.profile_path)"
+                    [alt]="castMember.name"
+                    class="w-100"
+                    onerror="this.src='//movie-discover-app/no-image.png'"
+                  />
+                </div>
+                <div class="cast-info p-3">
+                  <h6 class="cast-name mb-1">{{ castMember.name }}</h6>
+                  <p class="character-name text-muted mb-0">
+                    {{ castMember.character }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noCast>
+            <p class="text-muted">No cast information available.</p>
+          </ng-template>
+
+          <!-- Show More Cast Button -->
+          <div class="text-center mt-4" *ngIf="getCastMembers().length > 12">
+            <button
+              class="btn btn-outline-primary"
+              (click)="toggleShowAllCast()"
+            >
+              {{ showAllCast ? 'Show Less' : 'Show All Cast (' +
+              getCastMembers().length + ')' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Crew Tab -->
+        <div *ngIf="activeTab === 'crew'" class="tab-pane fade show active">
+          <h3 class="mb-4">Crew</h3>
+          <div
+            class="crew-departments"
+            *ngIf="getCrewByDepartment() | keyvalue; let departments"
+          >
+            <div
+              *ngFor="let dept of departments"
+              class="department-section mb-4"
+            >
+              <h4 class="department-title mb-3">{{ dept.key }}</h4>
+              <div class="row">
+                <div
+                  *ngFor="let crewMember of dept.value"
+                  class="col-xl-3 col-lg-4 col-md-6 col-12 mb-3"
+                >
+                  <div
+                    class="crew-card d-flex align-items-center p-3 bg-white rounded"
+                  >
+                    <img
+                      [src]="getPersonImageUrl(crewMember.profile_path)"
+                      [alt]="crewMember.name"
+                      class="crew-photo me-3"
+                      onerror="this.src='//movie-discover-app/no-image.png'"
+                    />
+                    <div>
+                      <h6 class="crew-name mb-1">{{ crewMember.name }}</h6>
+                      <p class="crew-job text-muted mb-0">
+                        {{ crewMember.job }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="getCrewMembers().length === 0">
+            <p class="text-muted">No crew information available.</p>
+          </div>
+        </div>
+
+        <!-- Reviews Tab -->
+        <div *ngIf="activeTab === 'reviews'" class="tab-pane fade show active">
+          <h3 class="mb-4">Reviews</h3>
+          <div *ngIf="getReviews().length > 0; else noReviews">
+            <div
+              *ngFor="let review of getDisplayedReviews()"
+              class="review-card mb-4"
+            >
+              <div class="review-header d-flex align-items-center mb-3">
+                <div class="reviewer-avatar me-3">
+                  <img
+                    *ngIf="review.author_details.avatar_path"
+                    [src]="getAvatarUrl(review.author_details.avatar_path)"
+                    [alt]="review.author"
+                    class="rounded-circle"
+                    onerror="this.src='//movie-discover-app/no-image.png'"
+                  />
+                  <div
+                    *ngIf="!review.author_details.avatar_path"
+                    class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center bg-secondary text-white"
+                  >
+                    {{ getInitials(review.author) }}
+                  </div>
+                </div>
+                <div class="flex-grow-1">
+                  <h5 class="reviewer-name mb-1">{{ review.author }}</h5>
+                  <div class="review-meta d-flex align-items-center">
+                    <span
+                      *ngIf="review.author_details.rating"
+                      class="badge bg-warning text-dark me-2"
+                    >
+                      <fa-icon [icon]="faStar" class="me-1"></fa-icon>
+                      {{ review.author_details.rating }}/10
+                    </span>
+                    <small class="text-muted"
+                      >{{ formatReviewDate(review.created_at) }}</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="review-content">
+                <p [innerHTML]="formatReviewContent(review.content)"></p>
+              </div>
+            </div>
+
+            <!-- Show More Reviews Button -->
+            <div class="text-center mt-4" *ngIf="getReviews().length > 3">
+              <button
+                class="btn btn-outline-primary"
+                (click)="toggleShowAllReviews()"
+              >
+                {{ showAllReviews ? 'Show Less' : 'Show All Reviews (' +
+                getReviews().length + ')' }}
+              </button>
+            </div>
+          </div>
+          <ng-template #noReviews>
+            <p class="text-muted">No reviews available for this movie.</p>
+          </ng-template>
+        </div>
+
+        <!-- Media Tab -->
+        <div *ngIf="activeTab === 'media'" class="tab-pane fade show active">
+          <h3 class="mb-4">Trailers</h3>
+
+          <!-- Videos Section -->
+          <div
+            *ngIf="getVideos().length > 0; else noTrailers"
+            class="videos-section mb-5"
+          >
+            <h4 class="mb-3">Videos & Trailers</h4>
+            <div class="row">
+              <div
+                *ngFor="let video of getDisplayedVideos()"
+                class="col-lg-6 col-12 mb-4"
+              >
+                <div class="video-card">
+                  <div class="ratio ratio-16x9">
+                    <iframe
+                      [src]="getVideoEmbedUrl(video.key)"
+                      [title]="video.name"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    >
+                    </iframe>
+                  </div>
+                  <div class="video-info p-3">
+                    <h6 class="video-title mb-1">{{ video.name }}</h6>
+                    <small class="text-muted"
+                      >{{ video.type }} • {{ getVideoDate(video.published_at)
+                      }}</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Show More Videos Button -->
+            <div class="text-center mt-3" *ngIf="getVideos().length > 4">
+              <button
+                class="btn btn-outline-primary"
+                (click)="toggleShowAllVideos()"
+              >
+                {{ showAllVideos ? 'Show Less' : 'Show All Videos (' +
+                getVideos().length + ')' }}
+              </button>
+            </div>
+          </div>
+          <ng-template #noTrailers>
+            <p class="text-muted">No trailers available for this movie.</p>
+          </ng-template>
+
+          <!-- Images Section -->
+          <div *ngIf="getBackdrops().length > 0" class="images-section">
+            <h4 class="mb-3">Images</h4>
+            <div class="row">
+              <div
+                *ngFor="let image of getDisplayedBackdrops()"
+                class="col-lg-4 col-md-6 col-12 mb-4"
+              >
+                <div class="image-card">
+                  <img
+                    [src]="getImageUrl(image.file_path, 'w500')"
+                    [alt]="movie.title + ' backdrop'"
+                    class="w-100 rounded cursor-pointer"
+                    (click)="openImageModal(image.file_path)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Show More Images Button -->
+            <div class="text-center mt-3" *ngIf="getBackdrops().length > 6">
+              <button
+                class="btn btn-outline-primary"
+                (click)="toggleShowAllImages()"
+              >
+                {{ showAllImages ? 'Show Less' : 'Show All Images (' +
+                getBackdrops().length + ')' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Similar Movies Section -->
+  <section
+    class="similar-movies py-5 bg-white"
+    *ngIf="similarMovies.length > 0"
+  >
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-12">
+          <h3 class="mb-3">You May Also Like</h3>
+          <p class="text-muted">Similar movies you might enjoy</p>
+        </div>
+      </div>
+
+      <!-- Loading State for Similar Movies -->
+      <div *ngIf="similarMoviesLoading" class="text-center py-4">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading similar movies...</span>
+        </div>
+      </div>
+
+      <!-- Similar Movies Grid -->
+      <div *ngIf="!similarMoviesLoading" class="row">
+        <div
+          *ngFor="let movie of displayedSimilarMovies; let i = index"
+          class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4"
+          [style.animation-delay]="i * 100 + 'ms'"
+        >
+          <app-movie-card
+            [movie]="movie"
+            [showQuickActions]="true"
+            class="fade-in-up"
+          >
+          </app-movie-card>
+        </div>
+      </div>
+
+      <!-- View All Similar Movies Button -->
+      <div class="text-center mt-4" *ngIf="similarMovies.length > 6">
+        <button class="btn btn-outline-primary" (click)="toggleSimilarMovies()">
+          {{ showAllSimilar ? 'Show Less' : 'View All Similar Movies' }}
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Loading State -->
+<div
+  *ngIf="loading"
+  class="loading-container d-flex align-items-center justify-content-center min-vh-100"
+>
+  <div class="text-center">
+    <div
+      class="spinner-border text-primary mb-3"
+      role="status"
+      style="width: 3rem; height: 3rem"
+    >
+      <span class="visually-hidden">Loading movie details...</span>
+    </div>
+    <h4 class="text-muted">Loading Movie Details...</h4>
+  </div>
+</div>
+
+<!-- Error State -->
+<div
+  *ngIf="error"
+  class="error-container d-flex align-items-center justify-content-center min-vh-100"
+>
+  <div class="text-center">
+    <div class="mb-4">
+      <fa-icon
+        [icon]="faExclamationTriangle"
+        class="text-warning"
+        style="font-size: 4rem"
+      ></fa-icon>
+    </div>
+    <h4 class="text-muted mb-3">Movie Not Found</h4>
+    <p class="text-muted mb-4">
+      We couldn't find the movie you're looking for.
+    </p>
+    <button class="btn btn-primary" (click)="goBack()">
+      <fa-icon [icon]="faArrowLeft" class="me-2"></fa-icon>
+      Go Back
+    </button>
+  </div>
+</div>
