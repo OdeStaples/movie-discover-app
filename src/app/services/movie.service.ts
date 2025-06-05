@@ -65,4 +65,8 @@ export class MovieService {
   getBackdropUrl(path: string): string {
     return this.getImageUrl(path, 'w1280');
   }
+
+  getPopularPeople(): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(`${this.baseUrl}/person/popular`);
+  }
 }

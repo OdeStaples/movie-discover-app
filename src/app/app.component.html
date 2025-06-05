@@ -1,4 +1,4 @@
-<div class="app-wrapper">
+<div class="app-wrapper bg-dark">
   <div class="header-wrapper">
     <app-header
       [searchType]="currentSearchType"
@@ -16,5 +16,22 @@
   <div class="content-wrapper">
     <router-outlet></router-outlet>
   </div>
-  <div class="footer-wrapper"></div>
+  <section class="footer-cta py-5 bg-dark text-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h3 class="mb-3">Ready to Discover More?</h3>
+          <p class="text-light mb-4">
+            Explore thousands of movies, create your perfect watchlist, and
+            never run out of great content to watch.
+          </p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button class="btn btn-primary btn-lg">🔥 Trending Movies</button>
+            <button class="btn btn-outline-light btn-lg">⭐ Top Rated</button>
+            <button class="btn btn-outline-light btn-lg">🎬 Coming Soon</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>

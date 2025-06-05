@@ -1,5 +1,5 @@
 <section class="hero-section bg-dark text-white">
-  <div class="container py-5">
+  <div class="container pt-5">
     <!-- Hero Text -->
     <div class="row">
       <div class="col-lg-6">
@@ -85,40 +85,39 @@
     </div>
 
     <!-- Mood Category Buttons -->
-  </div>
-</section>
+    <div class="container mb-2">
+      <div class="row mt-2">
+        <div class="col-12">
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button
+              class="btn btn-outline-white btn-lg category-btn"
+              [class.btn-primary]="selectedCategory === 'feelGood'"
+              [class.btn-outline-light]="selectedCategory !== 'feelGood'"
+              (click)="selectCategory('feelGood')"
+            >
+              😊 Feel Good
+            </button>
 
-<div class="container">
-  <div class="row mt-2">
-    <div class="col-12">
-      <div class="d-flex justify-content-center gap-3 flex-wrap">
-        <button
-          class="btn btn-outline-dark btn-lg category-btn"
-          [class.btn-primary]="selectedCategory === 'feelGood'"
-          [class.btn-outline-light]="selectedCategory !== 'feelGood'"
-          (click)="selectCategory('feelGood')"
-        >
-          😊 Feel Good
-        </button>
+            <button
+              class="btn btn-outline-white btn-lg category-btn"
+              [class.btn-primary]="selectedCategory === 'action'"
+              [class.btn-outline-light]="selectedCategory !== 'action'"
+              (click)="selectCategory('action')"
+            >
+              💥 Action
+            </button>
 
-        <button
-          class="btn btn-outline-dark btn-lg category-btn"
-          [class.btn-primary]="selectedCategory === 'action'"
-          [class.btn-outline-light]="selectedCategory !== 'action'"
-          (click)="selectCategory('action')"
-        >
-          💥 Action
-        </button>
-
-        <button
-          class="btn btn-outline-dark btn-lg category-btn"
-          [class.btn-primary]="selectedCategory === 'mindBender'"
-          [class.btn-outline-light]="selectedCategory !== 'mindBender'"
-          (click)="selectCategory('mindBender')"
-        >
-          🧠 Mind Benders
-        </button>
+            <button
+              class="btn btn-outline-white btn-lg category-btn"
+              [class.btn-primary]="selectedCategory === 'mindBender'"
+              [class.btn-outline-light]="selectedCategory !== 'mindBender'"
+              (click)="selectCategory('mindBender')"
+            >
+              🧠 Mind Benders
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>

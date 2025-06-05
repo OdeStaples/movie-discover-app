@@ -1,0 +1,127 @@
+.popular-people-section {
+      border-top: 1px solid #dee2e6;
+    }
+
+    .people-scroll-container {
+      overflow: hidden;
+    }
+
+    .people-item {
+      animation: slideInUp 0.6s ease-out both;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .person-card {
+      width: 180px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      margin-right: 1rem;
+      cursor: pointer;
+    }
+
+    .person-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .photo-container {
+      position: relative;
+      height: 180px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+
+    .person-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .person-card:hover .person-photo {
+      transform: scale(1.05);
+    }
+
+    .popularity-badge {
+      backdrop-filter: blur(4px);
+    }
+
+    .hover-overlay {
+      background: rgba(0,0,0,0.7);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .person-card:hover .hover-overlay {
+      opacity: 1;
+    }
+
+    .person-name {
+      font-weight: 600;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-height: 1.3;
+      min-height: 2.6em;
+    }
+
+    .known-for-list {
+      font-size: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .known-for-item {
+      color: #6c757d;
+    }
+
+    .scroll-indicators {
+      gap: 0.5rem;
+    }
+
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #dee2e6;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .indicator.active {
+      background-color: #0d6efd;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .person-card {
+        width: 140px;
+        margin-right: 0.75rem;
+      }
+
+      .photo-container {
+        height: 140px;
+      }
+
+      .person-name {
+        font-size: 0.8rem;
+      }
+
+      .hover-overlay {
+        opacity: 1 !important;
+        background: rgba(0,0,0,0.3);
+      }
+    }

@@ -19,6 +19,8 @@ import { HeroComponent } from '../../components/hero/hero.component';
 import * as MovieActions from '../../store/movies/movies.actions';
 import * as WatchlistActions from '../../store/watchlist/watchlist.actions';
 import { MovieGridComponent } from '../../components/movie-grid/movie-grid.component';
+import { WatchlistSectionComponent } from '../../components/watchlist-section/watchlist-section.component';
+import { PopularPeopleComponent } from '../../components/popular-people/popular-people.component';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +31,8 @@ import { MovieGridComponent } from '../../components/movie-grid/movie-grid.compo
     CommonModule,
     HeroComponent,
     MovieGridComponent,
+    WatchlistSectionComponent,
+    PopularPeopleComponent,
   ],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
