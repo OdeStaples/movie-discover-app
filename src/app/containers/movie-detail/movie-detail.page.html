@@ -22,7 +22,7 @@
               [src]="getPosterUrl()"
               [alt]="movie.title"
               class="movie-poster rounded shadow-lg"
-              onerror="this.src='//movie-discover-app/no-image.png'"
+              onerror="this.src='/movie-discover-app/no-image.png'"
             />
           </div>
         </div>
@@ -278,7 +278,7 @@
                     [src]="getPersonImageUrl(castMember.profile_path)"
                     [alt]="castMember.name"
                     class="w-100"
-                    onerror="this.src='//movie-discover-app/no-image.png'"
+                    onerror="this.src='/movie-discover-app/no-image.png'"
                   />
                 </div>
                 <div class="cast-info p-3">
@@ -330,7 +330,7 @@
                       [src]="getPersonImageUrl(crewMember.profile_path)"
                       [alt]="crewMember.name"
                       class="crew-photo me-3"
-                      onerror="this.src='//movie-discover-app/no-image.png'"
+                      onerror="this.src='/movie-discover-app/no-image.png'"
                     />
                     <div>
                       <h6 class="crew-name mb-1">{{ crewMember.name }}</h6>
@@ -363,7 +363,7 @@
                     [src]="getAvatarUrl(review.author_details.avatar_path)"
                     [alt]="review.author"
                     class="rounded-circle"
-                    onerror="this.src='//movie-discover-app/no-image.png'"
+                    onerror="this.src='/movie-discover-app/no-image.png'"
                   />
                   <div
                     *ngIf="!review.author_details.avatar_path"

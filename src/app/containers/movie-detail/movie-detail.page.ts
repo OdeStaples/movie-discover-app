@@ -287,7 +287,7 @@ export class MovieDetailPage implements OnInit, OnDestroy {
   getPersonImageUrl(profilePath: string | null): string {
     return profilePath
       ? this.movieService.getImageUrl(profilePath, 'w200')
-      : '//movie-discover-app/no-image.png';
+      : '/movie-discover-app/no-image.png';
   }
 
   getImageUrl(imagePath: string, size: string = 'w500'): string {
