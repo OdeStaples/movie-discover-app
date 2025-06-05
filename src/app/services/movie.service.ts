@@ -72,14 +72,41 @@ export class MovieService {
     return this.http.get<ApiResponse<any>>(`${this.baseUrl}/person/popular`);
   }
 
+  // Get person details with external IDs and combined credits
   getPersonDetails(personId: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/person/${personId}`);
+    return this.http.get<any>(
+      `${this.baseUrl}/person/${personId}?append_to_response=external_ids,known_for`
+    );
   }
 
-  // Get person movie/TV credits
-  getPersonCredits(personId: number): Observable<any> {
+  // Get person movie credits
+  getPersonMovieCredits(personId: number): Observable<any> {
     return this.http.get<any>(
       `${this.baseUrl}/person/${personId}/movie_credits`
+    );
+  }
+
+  // Get person TV credits
+  getPersonTVCredits(personId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/person/${personId}/tv_credits`);
+  }
+
+  // Get person images
+  getPersonImages(personId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/person/${personId}/images`);
+  }
+
+  // Get combined credits (movies and TV shows together)
+  getPersonCombinedCredits(personId: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/person/${personId}/combined_credits`
+    );
+  }
+
+  // Get person's external IDs (social media links, etc.)
+  getPersonExternalIds(personId: number): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}/person/${personId}/external_ids`
     );
   }
 }

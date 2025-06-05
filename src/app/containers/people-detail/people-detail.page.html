@@ -1,1 +1,506 @@
-<p>people-details works!</p>
+<div class="person-detail-container" *ngIf="!loading && !error && person">
+  <!-- Hero Section -->
+  <section class="person-hero position-relative">
+    <!-- Background with known-for movies -->
+    <div class="backdrop-container" *ngIf="getKnownForBackdrop()">
+      <img
+        [src]="getKnownForBackdrop()"
+        [alt]="person.name"
+        class="backdrop-image w-100"
+        onerror="this.style.display='none'"
+      />
+      <div class="backdrop-overlay"></div>
+    </div>
+
+    <!-- Person Info Overlay -->
+    <div class="container position-relative">
+      <div class="row align-items-center min-vh-50">
+        <div class="col-lg-4 col-md-5">
+          <!-- Person Photo -->
+          <div class="photo-container">
+            <img
+              [src]="getPersonPhotoUrl()"
+              [alt]="person.name"
+              class="person-photo rounded shadow-lg"
+              onerror="this.src='/movie-discover-app/no-image.png'"
+            />
+          </div>
+        </div>
+
+        <div class="col-lg-8 col-md-7">
+          <!-- Person Details -->
+          <div class="person-info text-white p-4">
+            <h1 class="person-name mb-3">{{ person.name }}</h1>
+
+            <!-- Known For Department -->
+            <div class="person-meta d-flex flex-wrap align-items-center mb-3">
+              <span class="badge bg-primary me-3 fs-6">
+                <fa-icon [icon]="faUser" class="me-1"></fa-icon>
+                {{ person.known_for_department }}
+              </span>
+              <span
+                class="badge bg-warning text-dark me-3"
+                *ngIf="person.popularity"
+              >
+                <fa-icon [icon]="faStar" class="me-1"></fa-icon>
+                Popularity: {{ person.popularity | number : "1.1-1" }}
+              </span>
+              <span class="text-light me-3" *ngIf="getAge()">
+                {{ getAge() }} years old
+              </span>
+              <span class="text-light" *ngIf="person.place_of_birth">
+                {{ person.place_of_birth }}
+              </span>
+            </div>
+
+            <!-- Biography -->
+            <p
+              class="person-biography lead mb-4"
+              *ngIf="person.biography && !showFullBio"
+            >
+              {{ getTruncatedBiography() }}
+              <button
+                *ngIf="person.biography.length > 300"
+                class="btn btn-link p-0 text-warning"
+                (click)="showFullBio = true"
+              >
+                Read more
+              </button>
+            </p>
+
+            <p
+              class="person-biography lead mb-4"
+              *ngIf="person.biography && showFullBio"
+            >
+              {{ person.biography }}
+              <button
+                class="btn btn-link p-0 text-warning"
+                (click)="showFullBio = false"
+              >
+                Show less
+              </button>
+            </p>
+
+            <!-- External Links -->
+            <div
+              class="external-links d-flex flex-wrap gap-3"
+              *ngIf="person.external_ids"
+            >
+              <a
+                *ngIf="person.external_ids.imdb_id"
+                [href]="'https://www.imdb.com/name/' + person.external_ids.imdb_id"
+                target="_blank"
+                class="btn btn-outline-light btn-sm"
+              >
+                <fa-icon [icon]="faExternalLink" class="me-1"></fa-icon>
+                IMDb
+              </a>
+              <a
+                *ngIf="person.external_ids.instagram_id"
+                [href]="'https://www.instagram.com/' + person.external_ids.instagram_id"
+                target="_blank"
+                class="btn btn-outline-light btn-sm"
+              >
+                <fa-icon [icon]="faInstagram" class="me-1"></fa-icon>
+                Instagram
+              </a>
+              <a
+                *ngIf="person.external_ids.twitter_id"
+                [href]="'https://twitter.com/' + person.external_ids.twitter_id"
+                target="_blank"
+                class="btn btn-outline-light btn-sm"
+              >
+                <fa-icon [icon]="faTwitter" class="me-1"></fa-icon>
+                Twitter
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Details Section -->
+  <section class="person-details bg-light py-5">
+    <div class="container">
+      <!-- Navigation Tabs -->
+      <ul class="nav nav-tabs mb-4" id="personTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'overview'"
+            (click)="setActiveTab('overview')"
+            type="button"
+          >
+            Overview
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'movies'"
+            (click)="setActiveTab('movies')"
+            type="button"
+          >
+            Movies ({{ getMovieCredits().length }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'tv'"
+            (click)="setActiveTab('tv')"
+            type="button"
+          >
+            TV Shows ({{ getTVCredits().length }})
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            [class.active]="activeTab === 'images'"
+            (click)="setActiveTab('images')"
+            type="button"
+          >
+            Photos
+          </button>
+        </li>
+      </ul>
+
+      <!-- Tab Content -->
+      <div class="tab-content">
+        <!-- Overview Tab -->
+        <div *ngIf="activeTab === 'overview'" class="tab-pane fade show active">
+          <div class="row">
+            <div class="col-md-8">
+              <h3 class="mb-3">Personal Information</h3>
+              <div class="person-details-grid">
+                <div class="detail-item" *ngIf="person.birthday">
+                  <strong>Birthday:</strong> {{ formatDate(person.birthday) }}
+                </div>
+                <div class="detail-item" *ngIf="person.deathday">
+                  <strong>Died:</strong> {{ formatDate(person.deathday) }}
+                </div>
+                <div class="detail-item" *ngIf="person.place_of_birth">
+                  <strong>Place of Birth:</strong> {{ person.place_of_birth }}
+                </div>
+                <div class="detail-item" *ngIf="person.known_for_department">
+                  <strong>Known For:</strong> {{ person.known_for_department }}
+                </div>
+                <div class="detail-item" *ngIf="person.popularity">
+                  <strong>Popularity:</strong> {{ person.popularity | number :
+                  "1.1-1" }}
+                </div>
+                <div
+                  class="detail-item"
+                  *ngIf="person.also_known_as && person.also_known_as.length > 0"
+                >
+                  <strong>Also Known As:</strong> {{
+                  person.also_known_as.slice(0, 3).join(', ') }}
+                </div>
+              </div>
+
+              <!-- Full Biography -->
+              <div class="biography-section mt-4" *ngIf="person.biography">
+                <h4 class="mb-3">Biography</h4>
+                <div class="biography-content p-3 bg-white rounded">
+                  <p
+                    class="mb-0"
+                    [innerHTML]="formatBiography(person.biography)"
+                  ></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <!-- Known For Movies -->
+              <div *ngIf="getTopKnownFor().length > 0">
+                <h4 class="mb-3">Known For</h4>
+                <div class="known-for-list">
+                  <div
+                    *ngFor="let item of getTopKnownFor()"
+                    class="known-for-item d-flex align-items-center mb-3 p-2 bg-white rounded cursor-pointer"
+                    (click)="navigateToMovie(item.id)"
+                  >
+                    <img
+                      [src]="getKnownForImageUrl(item.poster_path)"
+                      [alt]="item.title || item.name"
+                      class="known-for-poster me-3"
+                      onerror="this.src='/movie-discover-app/no-image.png'"
+                    />
+                    <div>
+                      <h6 class="mb-1">{{ item.title || item.name }}</h6>
+                      <small class="text-muted">
+                        {{ item.release_date ? (item.release_date | date:'yyyy')
+                        : (item.first_air_date ? (item.first_air_date |
+                        date:'yyyy') : 'Unknown') }}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Movies Tab -->
+        <div *ngIf="activeTab === 'movies'" class="tab-pane fade show active">
+          <h3 class="mb-4">Movie Credits</h3>
+          <div class="credits-filter mb-4">
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn"
+                [class.btn-primary]="movieCreditFilter === 'all'"
+                [class.btn-outline-primary]="movieCreditFilter !== 'all'"
+                (click)="setMovieCreditFilter('all')"
+              >
+                All ({{ getMovieCredits().length }})
+              </button>
+              <button
+                type="button"
+                class="btn"
+                [class.btn-primary]="movieCreditFilter === 'cast'"
+                [class.btn-outline-primary]="movieCreditFilter !== 'cast'"
+                (click)="setMovieCreditFilter('cast')"
+              >
+                Acting ({{ getMovieCreditsByCast().length }})
+              </button>
+              <button
+                type="button"
+                class="btn"
+                [class.btn-primary]="movieCreditFilter === 'crew'"
+                [class.btn-outline-primary]="movieCreditFilter !== 'crew'"
+                (click)="setMovieCreditFilter('crew')"
+              >
+                Crew ({{ getMovieCreditsByCrew().length }})
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="row"
+            *ngIf="getFilteredMovieCredits().length > 0; else noMovies"
+          >
+            <div
+              *ngFor="let movie of getDisplayedMovieCredits(); let i = index"
+              class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4"
+            >
+              <div
+                class="credit-card h-100 cursor-pointer"
+                (click)="navigateToMovie(movie.id)"
+              >
+                <div class="credit-poster">
+                  <img
+                    [src]="movieService.getImageUrl(movie.poster_path || '', 'w342')"
+                    [alt]="movie.title"
+                    class="w-100"
+                    onerror="this.src='/movie-discover-app/no-image.png'"
+                  />
+                </div>
+                <div class="credit-info p-3">
+                  <h6 class="credit-title mb-1">{{ movie.title }}</h6>
+                  <p
+                    class="credit-role text-muted mb-1"
+                    *ngIf="movie.character"
+                  >
+                    as {{ movie.character }}
+                  </p>
+                  <p class="credit-role text-muted mb-1" *ngIf="movie.job">
+                    {{ movie.job }}
+                  </p>
+                  <small class="text-muted">
+                    {{ movie.release_date ? (movie.release_date | date:'yyyy') :
+                    'Unknown' }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noMovies>
+            <p class="text-muted">No movie credits available.</p>
+          </ng-template>
+
+          <!-- Show More Movies Button -->
+          <div
+            class="text-center mt-4"
+            *ngIf="getFilteredMovieCredits().length > 12"
+          >
+            <button
+              class="btn btn-outline-primary"
+              (click)="toggleShowAllMovies()"
+            >
+              {{ showAllMovies ? 'Show Less' : 'Show All Movies (' +
+              getFilteredMovieCredits().length + ')' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- TV Shows Tab -->
+        <div *ngIf="activeTab === 'tv'" class="tab-pane fade show active">
+          <h3 class="mb-4">TV Credits</h3>
+          <div class="credits-filter mb-4">
+            <div class="btn-group" role="group">
+              <button
+                type="button"
+                class="btn"
+                [class.btn-primary]="tvCreditFilter === 'all'"
+                [class.btn-outline-primary]="tvCreditFilter !== 'all'"
+                (click)="setTVCreditFilter('all')"
+              >
+                All ({{ getTVCredits().length }})
+              </button>
+              <button
+                type="button"
+                class="btn"
+                [class.btn-primary]="tvCreditFilter === 'cast'"
+                [class.btn-outline-primary]="tvCreditFilter !== 'cast'"
+                (click)="setTVCreditFilter('cast')"
+              >
+                Acting ({{ getTVCreditsByCast().length }})
+              </button>
+              <button
+                type="button"
+                class="btn"
+                [class.btn-primary]="tvCreditFilter === 'crew'"
+                [class.btn-outline-primary]="tvCreditFilter !== 'crew'"
+                (click)="setTVCreditFilter('crew')"
+              >
+                Crew ({{ getTVCreditsByCrew().length }})
+              </button>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="getFilteredTVCredits().length > 0; else noTV">
+            <div
+              *ngFor="let show of getDisplayedTVCredits(); let i = index"
+              class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4"
+            >
+              <div class="credit-card h-100">
+                <div class="credit-poster">
+                  <img
+                    [src]="movieService.getImageUrl(show.poster_path || '', 'w342')"
+                    [alt]="show.name"
+                    class="w-100"
+                    onerror="this.src='/movie-discover-app/no-image.png'"
+                  />
+                </div>
+                <div class="credit-info p-3">
+                  <h6 class="credit-title mb-1">{{ show.name }}</h6>
+                  <p class="credit-role text-muted mb-1" *ngIf="show.character">
+                    as {{ show.character }}
+                  </p>
+                  <p class="credit-role text-muted mb-1" *ngIf="show.job">
+                    {{ show.job }}
+                  </p>
+                  <small class="text-muted">
+                    {{ show.first_air_date ? (show.first_air_date | date:'yyyy')
+                    : 'Unknown' }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noTV>
+            <p class="text-muted">No TV credits available.</p>
+          </ng-template>
+
+          <!-- Show More TV Button -->
+          <div
+            class="text-center mt-4"
+            *ngIf="getFilteredTVCredits().length > 12"
+          >
+            <button class="btn btn-outline-primary" (click)="toggleShowAllTV()">
+              {{ showAllTV ? 'Show Less' : 'Show All TV Shows (' +
+              getFilteredTVCredits().length + ')' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Images Tab -->
+        <div *ngIf="activeTab === 'images'" class="tab-pane fade show active">
+          <h3 class="mb-4">Photos</h3>
+
+          <div
+            *ngIf="getPersonImages().length > 0; else noImages"
+            class="images-section"
+          >
+            <div class="row">
+              <div
+                *ngFor="let image of getDisplayedImages()"
+                class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4"
+              >
+                <div class="image-card">
+                  <img
+                    [src]="movieService.getImageUrl(image.file_path, 'w500')"
+                    [alt]="person.name + ' photo'"
+                    class="w-100 rounded cursor-pointer"
+                    (click)="openImageModal(image.file_path)"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Show More Images Button -->
+            <div class="text-center mt-3" *ngIf="getPersonImages().length > 8">
+              <button
+                class="btn btn-outline-primary"
+                (click)="toggleShowAllImages()"
+              >
+                {{ showAllImages ? 'Show Less' : 'Show All Photos (' +
+                getPersonImages().length + ')' }}
+              </button>
+            </div>
+          </div>
+
+          <ng-template #noImages>
+            <p class="text-muted">No photos available for this person.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Loading State -->
+<div
+  *ngIf="loading"
+  class="loading-container d-flex align-items-center justify-content-center min-vh-100"
+>
+  <div class="text-center">
+    <div
+      class="spinner-border text-primary mb-3"
+      role="status"
+      style="width: 3rem; height: 3rem"
+    >
+      <span class="visually-hidden">Loading person details...</span>
+    </div>
+    <h4 class="text-muted">Loading Person Details...</h4>
+  </div>
+</div>
+
+<!-- Error State -->
+<div
+  *ngIf="error"
+  class="error-container d-flex align-items-center justify-content-center min-vh-100"
+>
+  <div class="text-center">
+    <div class="mb-4">
+      <fa-icon
+        [icon]="faExclamationTriangle"
+        class="text-warning"
+        style="font-size: 4rem"
+      ></fa-icon>
+    </div>
+    <h4 class="text-muted mb-3">Person Not Found</h4>
+    <p class="text-muted mb-4">
+      We couldn't find the person you're looking for.
+    </p>
+    <button class="btn btn-primary" (click)="goBack()">
+      <fa-icon [icon]="faArrowLeft" class="me-2"></fa-icon>
+      Go Back
+    </button>
+  </div>
+</div>
