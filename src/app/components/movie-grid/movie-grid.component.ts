@@ -22,9 +22,10 @@ export class MovieGridComponent implements OnInit, OnDestroy {
   hasError = false;
   showAll = false;
 
-  feelGoodMovies$ = this.store.select(MovieSelectors.selectFeelGoodMovies);
-  actionMovies$ = this.store.select(MovieSelectors.selectActionMovies);
-  mindBenderMovies$ = this.store.select(MovieSelectors.selectMindBenderMovies);
+  selectedCategory$ = this.store.select(MovieSelectors.selectSelectedCategory);
+  currentCategoryMovies$ = this.store.select(
+    MovieSelectors.selectCurrentCategoryMovies
+  );
   categoryLoading$ = this.store.select(
     MovieSelectors.selectCategoryMoviesLoading
   );
@@ -32,32 +33,17 @@ export class MovieGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     combineLatest([
-      this.feelGoodMovies$,
-      this.actionMovies$,
-      this.mindBenderMovies$,
+      this.selectedCategory$,
+      this.currentCategoryMovies$,
       this.categoryLoading$,
       this.categoryError$,
     ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([feelGood, action, mindBender, loading, error]) => {
+      .subscribe(([selectedCategory, movies, loading, error]) => {
+        this.selectedCategory = selectedCategory;
+        this.currentMovies = movies;
         this.isLoading = loading;
         this.hasError = !!error;
-
-        // Determine which category has movies and set as current
-        if (feelGood.length > 0) {
-          this.selectedCategory = 'feelGood';
-          this.currentMovies = feelGood;
-        } else if (action.length > 0) {
-          this.selectedCategory = 'action';
-          this.currentMovies = action;
-        } else if (mindBender.length > 0) {
-          this.selectedCategory = 'mindBender';
-          this.currentMovies = mindBender;
-        } else if (!loading) {
-          // No movies loaded and not loading
-          this.selectedCategory = null;
-          this.currentMovies = [];
-        }
 
         // Reset showAll when category changes
         this.showAll = false;

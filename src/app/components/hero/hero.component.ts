@@ -64,7 +64,10 @@ export class HeroComponent implements OnInit {
   selectCategory(category: 'feelGood' | 'action' | 'mindBender') {
     this.selectedCategory = category;
 
-    // Dispatch appropriate action based on category
+    // Dispatch the category selection action
+    this.store.dispatch(MovieActions.selectCategory({ category }));
+
+    // Then dispatch appropriate action based on category
     switch (category) {
       case 'feelGood':
         this.store.dispatch(MovieActions.loadFeelGoodMovies());

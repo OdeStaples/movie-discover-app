@@ -5,6 +5,12 @@ import { createReducer, on } from '@ngrx/store';
 export const movieReducer = createReducer(
   initialMovieState,
 
+  // Category Selection
+  on(MovieActions.selectCategory, (state, { category }) => ({
+    ...state,
+    selectedCategory: category,
+  })),
+
   // Popular Movies
   on(MovieActions.loadPopularMovies, (state) => ({
     ...state,

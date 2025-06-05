@@ -23,6 +23,12 @@ export const loadTrendingMoviesFailure = createAction(
   props<{ error: string }>()
 );
 
+// Category Selection Action
+export const selectCategory = createAction(
+  '[Movie] Select Category',
+  props<{ category: 'feelGood' | 'action' | 'mindBender' }>()
+);
+
 // Category Movies Actions
 export const loadFeelGoodMovies = createAction('[Movie] Load Feel Good Movies');
 export const loadActionMovies = createAction('[Movie] Load Action Movies');

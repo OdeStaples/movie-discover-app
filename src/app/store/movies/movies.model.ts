@@ -17,6 +17,7 @@ export interface MovieState {
   mindBenderMovies: Movie[];
   categoryMoviesLoading: boolean;
   categoryMoviesError: string | null;
+  selectedCategory: 'feelGood' | 'action' | 'mindBender' | null;
 
   // Selected movie details
   selectedMovie: Movie | null;
@@ -43,6 +44,7 @@ export const initialMovieState: MovieState = {
   mindBenderMovies: [],
   categoryMoviesLoading: false,
   categoryMoviesError: null,
+  selectedCategory: null,
 
   selectedMovie: null,
   selectedMovieLoading: false,
