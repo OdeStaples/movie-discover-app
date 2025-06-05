@@ -1,0 +1,1 @@
+import{Eb as i,ab as a,qb as p,rb as o}from"./chunk-2UKDI23C.js";var l=class t{static \u0275fac=function(e){return new(e||t)};static \u0275cmp=a({type:t,selectors:[["app-people-detail"]],decls:2,vars:0,template:function(e,s){e&1&&(p(0,"p"),i(1,"people-details works!"),o())},encapsulation:2})};export{l as PeopleDetailPage};
