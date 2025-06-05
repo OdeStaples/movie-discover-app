@@ -1,0 +1,114 @@
+<section class="movie-grid-section py-5" *ngIf="shouldShowGrid">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h2 class="mb-2">{{ getSectionTitle() }}</h2>
+            <p class="text-muted mb-0">{{ getSectionSubtitle() }}</p>
+          </div>
+          <button
+            *ngIf="currentMovies.length > 6"
+            class="btn btn-outline-primary"
+            (click)="toggleViewAll()"
+          >
+            {{ showAll ? "Show Less" : "View All" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-center align-items-center py-5">
+          <div class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status">
+              <span class="visually-hidden">Loading movies...</span>
+            </div>
+            <p class="text-muted">Finding perfect movies for your mood...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="hasError && !isLoading" class="row">
+      <div class="col-12">
+        <div class="alert alert-warning text-center" role="alert">
+          <h5 class="alert-heading">Oops! Something went wrong</h5>
+          <p class="mb-0">
+            We couldn't load the movies right now. Please try again later.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movies Grid -->
+    <div
+      *ngIf="!isLoading && !hasError && currentMovies.length > 0"
+      class="row"
+    >
+      <div
+        *ngFor="let movie of displayedMovies; let i = index"
+        class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4"
+        [style.animation-delay]="i * 100 + 'ms'"
+      >
+        <app-movie-card
+          [movie]="movie"
+          [showQuickActions]="true"
+          class="fade-in-up"
+        >
+        </app-movie-card>
+      </div>
+    </div>
+
+    <!-- No Movies State -->
+    <div
+      *ngIf="
+        !isLoading &&
+        !hasError &&
+        currentMovies.length === 0 &&
+        selectedCategory
+      "
+      class="row"
+    >
+      <div class="col-12">
+        <div class="text-center py-5">
+          <div class="mb-3">
+            <i class="fas fa-film text-muted" style="font-size: 4rem"></i>
+          </div>
+          <h4 class="text-muted mb-2">No movies found</h4>
+          <p class="text-muted">
+            We couldn't find any {{ getCategoryDisplayName() }} movies right
+            now.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action for No Selection -->
+    <div *ngIf="!selectedCategory && !isLoading" class="row">
+      <div class="col-12">
+        <div class="text-center py-5">
+          <div class="mb-3">
+            <i
+              class="fas fa-hand-pointer text-primary"
+              style="font-size: 3rem"
+            ></i>
+          </div>
+          <h4 class="mb-2">Choose Your Mood</h4>
+          <p class="text-muted mb-4">
+            Select a category above to discover movies that match your mood
+          </p>
+          <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <span class="badge bg-light text-dark p-2">😊 Feel Good</span>
+            <span class="badge bg-light text-dark p-2">💥 Action</span>
+            <span class="badge bg-light text-dark p-2">🧠 Mind Benders</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

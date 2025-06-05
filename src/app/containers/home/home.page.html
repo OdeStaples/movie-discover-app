@@ -1,14 +1,7 @@
-<app-header
-  [searchType]="currentSearchType"
-  [loading]="searchLoading$ | async"
-  [movieResults]="movieResults$ | async"
-  [actorResults]="actorResults$ | async"
-  [searchResults]="searchResults"
-  (currentSearch)="updateSearchInput($event)"
-  (searchTypeUpdate)="updateSearchType($event)"
-  (onClearSearch)="clearSearch()"
-  (selectedItem)="navigateToSelection($event)"
-  (redirectHome)="redirectToHome()"
-/>
-
-<app-hero />
+<div class="home-container">
+  <div class="hero-container">
+    <app-hero />
+    <app-movie-grid class="category-results"></app-movie-grid>
+  </div>
+  <div class="footer-container"></div>
+</div>

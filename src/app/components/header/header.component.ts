@@ -136,5 +136,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  redirectToHome(): void {}
+  redirectToHome(): void {
+    this.redirectHome.emit();
+  }
 }

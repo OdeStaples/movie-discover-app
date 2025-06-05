@@ -3,12 +3,14 @@
     <!-- Hero Text -->
     <div class="row">
       <div class="col-lg-6">
-        <h1 class="display-2 fw-bold mb-3 position-relative">
+        <h1 class="display-2 mb-3 position-relative hero-text">
           What <br />
           Should I Watch
           <br /><span class="highlight">Tonight?</span>
         </h1>
-        <p class="lead mb-4 text-light">Discover your next favorite movie...</p>
+        <p class="lead mt-4 text-light hero-subtext">
+          Discover your next favorite movie...
+        </p>
       </div>
 
       <!-- Featured Movie Carousel -->
@@ -21,11 +23,7 @@
             <!-- Movie Backdrop -->
             <div class="position-relative">
               <img
-                [src]="
-                  movieService.getBackdropUrl(
-                    currentFeaturedMovie.backdrop_path
-                  )
-                "
+                [src]="getCurrentFeaturedMovie()"
                 [alt]="currentFeaturedMovie.title"
                 class="w-100"
                 style="height: 300px; object-fit: cover"

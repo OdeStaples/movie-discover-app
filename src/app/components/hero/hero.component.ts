@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Movie } from '../../models/movie.model';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -178,5 +178,11 @@ export class HeroComponent implements OnInit {
     this.destroy$.next();
     this.destroy$.complete();
     this.stopAutoRotation();
+  }
+
+  getCurrentFeaturedMovie(): string {
+    return this.movieService.getBackdropUrl(
+      this.currentFeaturedMovie.backdrop_path
+    );
   }
 }

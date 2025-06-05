@@ -3,6 +3,15 @@
   // background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
 }
 
+.hero-text {
+  letter-spacing: 4px;
+  font-weight: 500;
+}
+
+.hero-subtext {
+  letter-spacing: 3px;
+}
+
 .featured-movie-card {
   transition: transform 0.3s ease;
   min-height: 300px; /* Prevent layout shift */

@@ -44,6 +44,10 @@ export const selectCategoryMoviesLoading = createSelector(
   selectMovieState,
   (state) => state.categoryMoviesLoading
 );
+export const selectCategoryMoviesError = createSelector(
+  selectMovieState,
+  (state) => state.categoryMoviesError
+);
 
 // Selected Movie Selectors
 export const selectSelectedMovie = createSelector(
