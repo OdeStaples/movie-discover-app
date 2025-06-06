@@ -8,7 +8,7 @@ import {
 import { environment } from '../../environments/environment';
 import { tmdbAuthInterceptor } from './tmdb-auth.interceptor';
 import { Observable } from 'rxjs';
-fdescribe('tmdbAuthInterceptor', () => {
+describe('tmdbAuthInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) =>
     TestBed.runInInjectionContext(() => tmdbAuthInterceptor(req, next));
 
