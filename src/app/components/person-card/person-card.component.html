@@ -7,7 +7,7 @@
       [class.loaded]="imageLoaded"
       (load)="onImageLoad()"
       (error)="onImageError($event)"
-      onerror="this.src='/movie-discover-app/no-image.png'"
+      onerror="this.src=getDefaultImage()"
     />
 
     <div

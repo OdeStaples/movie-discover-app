@@ -14,6 +14,7 @@ import { Movie } from '../../models/movie.model';
 import { MovieService } from '../../services/movie.service';
 import * as WatchlistActions from '../../store/watchlist/watchlist.actions';
 import * as WatchlistSelectors from '../../store/watchlist/watchlist.selectors';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-movie-card',
@@ -37,6 +38,7 @@ export class MovieCardComponent implements OnInit {
 
   imageLoaded = false;
   isInWatchlist = false;
+  prodEnv = environment.production;
 
   ngOnInit(): void {
     this.store
@@ -87,5 +89,9 @@ export class MovieCardComponent implements OnInit {
 
   getMovieImage(): string {
     return this.movieService.getImageUrl(this.movie.poster_path);
+  }
+
+  getDefaultImage(): string {
+    return this.prodEnv ? '/movie-discover-app/no-image.png' : '/no-image.png';
   }
 }

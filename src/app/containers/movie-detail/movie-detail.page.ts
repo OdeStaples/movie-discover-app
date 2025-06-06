@@ -15,15 +15,14 @@ import {
   faExternalLink,
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartOutline } from '@fortawesome/free-regular-svg-icons';
-
 import { Movie } from '../../models/movie.model';
 import { MovieService } from '../../services/movie.service';
 import { MovieCardComponent } from '../../components/movie-card/movie-card.component';
-
 import * as MovieActions from '../../store/movies/movies.actions';
 import * as MovieSelectors from '../../store/movies/movies.selectors';
 import * as WatchlistActions from '../../store/watchlist/watchlist.actions';
 import * as WatchlistSelectors from '../../store/watchlist/watchlist.selectors';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-movie-detail',
@@ -40,7 +39,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
   public movieService = inject(MovieService);
   private destroy$ = new Subject<void>();
 
-  // Font Awesome icons
   faStar = faStar;
   faHeart = faHeart;
   faHeartOutline = faHeartOutline;
@@ -50,8 +48,7 @@ export class MovieDetailPage implements OnInit, OnDestroy {
   faPlay = faPlay;
   faExternalLink = faExternalLink;
 
-  // Component state
-  movie: any = null; // Use any to handle the extended movie object with credits, videos, etc.
+  movie: any = null;
   loading = false;
   error = false;
   movieId: number | null = null;
@@ -59,18 +56,15 @@ export class MovieDetailPage implements OnInit, OnDestroy {
   isInWatchlist = false;
   showTrailer = false;
 
-  // Display state for tabs
   showAllCast = false;
   showAllReviews = false;
   showAllVideos = false;
   showAllImages = false;
 
-  // Similar movies
   similarMovies: Movie[] = [];
   similarMoviesLoading = false;
   showAllSimilar = false;
 
-  // Selectors
   selectedMovie$ = this.store.select(MovieSelectors.selectSelectedMovie);
   selectedMovieLoading$ = this.store.select(
     MovieSelectors.selectSelectedMovieLoading
@@ -82,9 +76,9 @@ export class MovieDetailPage implements OnInit, OnDestroy {
   similarMoviesLoading$ = this.store.select(
     MovieSelectors.selectSimilarMoviesLoading
   );
+  prodEnv = environment.production;
 
   ngOnInit(): void {
-    // Get movie ID from route params
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       const id = +params['id'];
       if (id && !isNaN(id)) {
@@ -96,7 +90,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
       }
     });
 
-    // Subscribe to movie details from store
     combineLatest([
       this.selectedMovie$,
       this.selectedMovieLoading$,
@@ -108,7 +101,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
         this.loading = loading;
         this.error = !!error;
 
-        // Check if movie is in watchlist
         if (movie) {
           this.store
             .select(WatchlistSelectors.selectIsInWatchlist(movie.id))
@@ -119,7 +111,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
         }
       });
 
-    // Subscribe to similar movies
     combineLatest([this.similarMovies$, this.similarMoviesLoading$])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([movies, loading]) => {
@@ -129,20 +120,15 @@ export class MovieDetailPage implements OnInit, OnDestroy {
   }
 
   private loadMovieDetails(movieId: number): void {
-    // Clear previous movie data
     this.store.dispatch(MovieActions.clearSelectedMovie());
-    // Load new movie details
     this.store.dispatch(MovieActions.loadMovieDetails({ movieId }));
   }
 
   private loadSimilarMovies(movieId: number): void {
-    // Clear previous similar movies
     this.store.dispatch(MovieActions.clearSimilarMovies());
-    // Load similar movies
     this.store.dispatch(MovieActions.loadSimilarMovies({ movieId }));
   }
 
-  // UI Methods
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
@@ -176,7 +162,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
   }
 
   openImageModal(imagePath: string): void {
-    // Open image in new tab for now - you can implement a proper modal later
     const fullImageUrl = this.getImageUrl(imagePath, 'original');
     window.open(fullImageUrl, '_blank');
   }
@@ -185,7 +170,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  // Display getters
   get displayedSimilarMovies(): Movie[] {
     if (this.showAllSimilar) {
       return this.similarMovies;
@@ -193,7 +177,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
     return this.similarMovies.slice(0, 6);
   }
 
-  // Cast and Crew methods
   getCastMembers(): any[] {
     return this.movie?.credits?.cast || [];
   }
@@ -219,7 +202,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
     }, {});
   }
 
-  // Reviews methods
   getReviews(): any[] {
     return this.movie?.reviews?.results || [];
   }
@@ -229,7 +211,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
     return this.showAllReviews ? reviews : reviews.slice(0, 3);
   }
 
-  // Media methods
   getVideos(): any[] {
     return this.movie?.videos?.results || [];
   }
@@ -261,7 +242,6 @@ export class MovieDetailPage implements OnInit, OnDestroy {
     );
   }
 
-  // Helper Methods
   getMovieYear(): string {
     return this.movie?.release_date
       ? new Date(this.movie.release_date).getFullYear().toString()
@@ -287,7 +267,9 @@ export class MovieDetailPage implements OnInit, OnDestroy {
   getPersonImageUrl(profilePath: string | null): string {
     return profilePath
       ? this.movieService.getImageUrl(profilePath, 'w200')
-      : '/movie-discover-app/no-image.png';
+      : this.prodEnv
+      ? '/movie-discover-app/no-image.png'
+      : '/no-image.png';
   }
 
   getImageUrl(imagePath: string, size: string = 'w500'): string {
@@ -296,7 +278,7 @@ export class MovieDetailPage implements OnInit, OnDestroy {
 
   getAvatarUrl(avatarPath: string): string {
     if (avatarPath.startsWith('/https://')) {
-      return avatarPath.substring(1); // Remove leading slash for external URLs
+      return avatarPath.substring(1);
     }
     return this.movieService.getImageUrl(avatarPath, 'w200');
   }

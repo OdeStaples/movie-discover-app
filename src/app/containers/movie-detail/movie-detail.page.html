@@ -1,7 +1,5 @@
 <div class="movie-detail-container" *ngIf="!loading && !error && movie">
-  <!-- Hero Section -->
   <section class="movie-hero position-relative">
-    <!-- Backdrop Image -->
     <div class="backdrop-container">
       <img
         [src]="getBackdropUrl()"
@@ -12,27 +10,23 @@
       <div class="backdrop-overlay"></div>
     </div>
 
-    <!-- Movie Info Overlay -->
     <div class="container position-relative">
       <div class="row align-items-center min-vh-50">
         <div class="col-lg-4 col-md-5">
-          <!-- Movie Poster -->
           <div class="poster-container">
             <img
               [src]="getPosterUrl()"
               [alt]="movie.title"
               class="movie-poster rounded shadow-lg"
-              onerror="this.src='/movie-discover-app/no-image.png'"
+              onerror="this.src=getDefaultImage()"
             />
           </div>
         </div>
 
         <div class="col-lg-8 col-md-7">
-          <!-- Movie Details -->
           <div class="movie-info text-white p-4">
             <h1 class="movie-title mb-3">{{ movie.title }}</h1>
 
-            <!-- Tagline -->
             <p
               *ngIf="movie.tagline"
               class="tagline text-warning mb-3 fst-italic"
@@ -40,7 +34,6 @@
               "{{ movie.tagline }}"
             </p>
 
-            <!-- Rating and Basic Info -->
             <div class="movie-meta d-flex flex-wrap align-items-center mb-3">
               <span class="badge bg-warning text-dark me-3 fs-6">
                 <fa-icon [icon]="faStar" class="me-1"></fa-icon>
@@ -66,7 +59,6 @@
               </span>
             </div>
 
-            <!-- Genres -->
             <div
               class="genres mb-3"
               *ngIf="movie.genres && movie.genres.length > 0"
@@ -79,12 +71,10 @@
               </span>
             </div>
 
-            <!-- Overview -->
             <p class="movie-overview lead mb-4" *ngIf="movie.overview">
               {{ movie.overview }}
             </p>
 
-            <!-- Action Buttons -->
             <div class="action-buttons d-flex flex-wrap gap-3">
               <button
                 class="btn btn-primary btn-lg"
@@ -104,10 +94,8 @@
     </div>
   </section>
 
-  <!-- Details Section -->
   <section class="movie-details bg-light py-5">
     <div class="container">
-      <!-- Navigation Tabs -->
       <ul class="nav nav-tabs mb-4" id="movieTabs" role="tablist">
         <li class="nav-item" role="presentation">
           <button
@@ -161,9 +149,7 @@
         </li>
       </ul>
 
-      <!-- Tab Content -->
       <div class="tab-content">
-        <!-- Overview Tab -->
         <div *ngIf="activeTab === 'overview'" class="tab-pane fade show active">
           <div class="row">
             <div class="col-md-8">
@@ -195,7 +181,6 @@
                 </div>
               </div>
 
-              <!-- Collection Info -->
               <div
                 *ngIf="movie.belongs_to_collection"
                 class="collection-info mt-4"
@@ -245,7 +230,6 @@
                 </div>
               </div>
 
-              <!-- Spoken Languages -->
               <div
                 *ngIf="movie.spoken_languages && movie.spoken_languages.length > 0"
                 class="mt-4"
@@ -264,7 +248,6 @@
           </div>
         </div>
 
-        <!-- Cast Tab -->
         <div *ngIf="activeTab === 'cast'" class="tab-pane fade show active">
           <h3 class="mb-4">Cast</h3>
           <div class="row" *ngIf="getCastMembers().length > 0; else noCast">
@@ -278,7 +261,7 @@
                     [src]="getPersonImageUrl(castMember.profile_path)"
                     [alt]="castMember.name"
                     class="w-100"
-                    onerror="this.src='/movie-discover-app/no-image.png'"
+                    onerror="this.src=getDefaultImage()"
                   />
                 </div>
                 <div class="cast-info p-3">
@@ -294,7 +277,6 @@
             <p class="text-muted">No cast information available.</p>
           </ng-template>
 
-          <!-- Show More Cast Button -->
           <div class="text-center mt-4" *ngIf="getCastMembers().length > 12">
             <button
               class="btn btn-outline-primary"
@@ -306,7 +288,6 @@
           </div>
         </div>
 
-        <!-- Crew Tab -->
         <div *ngIf="activeTab === 'crew'" class="tab-pane fade show active">
           <h3 class="mb-4">Crew</h3>
           <div
@@ -330,7 +311,7 @@
                       [src]="getPersonImageUrl(crewMember.profile_path)"
                       [alt]="crewMember.name"
                       class="crew-photo me-3"
-                      onerror="this.src='/movie-discover-app/no-image.png'"
+                      onerror="this.src=getDefaultImage()"
                     />
                     <div>
                       <h6 class="crew-name mb-1">{{ crewMember.name }}</h6>
@@ -348,7 +329,6 @@
           </div>
         </div>
 
-        <!-- Reviews Tab -->
         <div *ngIf="activeTab === 'reviews'" class="tab-pane fade show active">
           <h3 class="mb-4">Reviews</h3>
           <div *ngIf="getReviews().length > 0; else noReviews">
@@ -363,7 +343,7 @@
                     [src]="getAvatarUrl(review.author_details.avatar_path)"
                     [alt]="review.author"
                     class="rounded-circle"
-                    onerror="this.src='/movie-discover-app/no-image.png'"
+                    onerror="this.src=getDefaultImage()"
                   />
                   <div
                     *ngIf="!review.author_details.avatar_path"
@@ -393,7 +373,6 @@
               </div>
             </div>
 
-            <!-- Show More Reviews Button -->
             <div class="text-center mt-4" *ngIf="getReviews().length > 3">
               <button
                 class="btn btn-outline-primary"
@@ -409,11 +388,9 @@
           </ng-template>
         </div>
 
-        <!-- Media Tab -->
         <div *ngIf="activeTab === 'media'" class="tab-pane fade show active">
           <h3 class="mb-4">Trailers</h3>
 
-          <!-- Videos Section -->
           <div
             *ngIf="getVideos().length > 0; else noTrailers"
             class="videos-section mb-5"
@@ -446,7 +423,6 @@
               </div>
             </div>
 
-            <!-- Show More Videos Button -->
             <div class="text-center mt-3" *ngIf="getVideos().length > 4">
               <button
                 class="btn btn-outline-primary"
@@ -461,7 +437,6 @@
             <p class="text-muted">No trailers available for this movie.</p>
           </ng-template>
 
-          <!-- Images Section -->
           <div *ngIf="getBackdrops().length > 0" class="images-section">
             <h4 class="mb-3">Images</h4>
             <div class="row">
@@ -480,7 +455,6 @@
               </div>
             </div>
 
-            <!-- Show More Images Button -->
             <div class="text-center mt-3" *ngIf="getBackdrops().length > 6">
               <button
                 class="btn btn-outline-primary"
@@ -496,7 +470,6 @@
     </div>
   </section>
 
-  <!-- Similar Movies Section -->
   <section
     class="similar-movies py-5 bg-white"
     *ngIf="similarMovies.length > 0"
@@ -509,14 +482,12 @@
         </div>
       </div>
 
-      <!-- Loading State for Similar Movies -->
       <div *ngIf="similarMoviesLoading" class="text-center py-4">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading similar movies...</span>
         </div>
       </div>
 
-      <!-- Similar Movies Grid -->
       <div *ngIf="!similarMoviesLoading" class="row">
         <div
           *ngFor="let movie of displayedSimilarMovies; let i = index"
@@ -532,7 +503,6 @@
         </div>
       </div>
 
-      <!-- View All Similar Movies Button -->
       <div class="text-center mt-4" *ngIf="similarMovies.length > 6">
         <button class="btn btn-outline-primary" (click)="toggleSimilarMovies()">
           {{ showAllSimilar ? 'Show Less' : 'View All Similar Movies' }}
@@ -542,7 +512,6 @@
   </section>
 </div>
 
-<!-- Loading State -->
 <div
   *ngIf="loading"
   class="loading-container d-flex align-items-center justify-content-center min-vh-100"
@@ -559,7 +528,6 @@
   </div>
 </div>
 
-<!-- Error State -->
 <div
   *ngIf="error"
   class="error-container d-flex align-items-center justify-content-center min-vh-100"

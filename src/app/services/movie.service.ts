@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 export class MovieService {
   private http = inject(HttpClient);
   private baseUrl = environment.tmdbBaseUrl;
+  prodEnv = environment.production;
 
   getPopularMovies(): Observable<ApiResponse<Movie>> {
     return this.http.get<ApiResponse<Movie>>(`${this.baseUrl}/movie/popular`);
@@ -61,7 +62,9 @@ export class MovieService {
   getImageUrl(path: string, size: string = 'w500'): string {
     return path
       ? `https://image.tmdb.org/t/p/${size}${path}`
-      : '/movie-discover-app/no-image.png';
+      : this.prodEnv
+      ? '/movie-discover-app/no-image.png'
+      : '/no-image.png';
   }
 
   getBackdropUrl(path: string): string {

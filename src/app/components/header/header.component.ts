@@ -13,6 +13,7 @@ import { SearchItem } from '../../models/search.model';
 import { SearchType } from '../../store/search/search.actions';
 import { Movie } from '../../models/movie.model';
 import { COMPARATORS, MOVIE_CONSTANTS } from '../../constants/movie.constants';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -29,6 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchText = '';
   showDropdown = false;
   selectedIndex = -1;
+  prodEnv = environment.production;
 
   @Input({ required: true }) searchType = 'movie';
   @Input() loading: boolean | null = false;
@@ -119,7 +121,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const imagePath = item.poster_path || item.profile_path;
     return imagePath
       ? `https://image.tmdb.org/t/p/w92${imagePath}`
-      : '/movie-discover-app/no-image.png';
+      : this.prodEnv
+      ? '/movie-discover-app/no-image.png'
+      : '/no-image.png';
   }
 
   getItemTitle(item: SearchItem): string {
@@ -138,5 +142,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   redirectToHome(): void {
     this.redirectHome.emit();
+  }
+
+  getLogoPath(): string {
+    return this.prodEnv ? '/movie-discover-app/logo.svg' : '/logo.svg';
+  }
+
+  getDefaultImage(): string {
+    return this.prodEnv ? '/movie-discover-app/no-image.png' : '/no-image.png';
   }
 }

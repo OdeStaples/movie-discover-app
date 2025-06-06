@@ -22,7 +22,7 @@
               [src]="getPersonPhotoUrl()"
               [alt]="person.name"
               class="person-photo rounded shadow-lg"
-              onerror="this.src='/movie-discover-app/no-image.png'"
+              onerror="this.src=getDefaultImage()"
             />
           </div>
         </div>
@@ -226,7 +226,7 @@
                       [src]="getKnownForImageUrl(item.poster_path)"
                       [alt]="item.title || item.name"
                       class="known-for-poster me-3"
-                      onerror="this.src='/movie-discover-app/no-image.png'"
+                      onerror="this.src=getDefaultImage()"
                     />
                     <div>
                       <h6 class="mb-1">{{ item.title || item.name }}</h6>
@@ -295,7 +295,7 @@
                     [src]="movieService.getImageUrl(movie.poster_path || '', 'w342')"
                     [alt]="movie.title"
                     class="w-100"
-                    onerror="this.src='/movie-discover-app/no-image.png'"
+                    onerror="this.src=getDefaultImage()"
                   />
                 </div>
                 <div class="credit-info p-3">
@@ -383,7 +383,7 @@
                     [src]="movieService.getImageUrl(show.poster_path || '', 'w342')"
                     [alt]="show.name"
                     class="w-100"
-                    onerror="this.src='/movie-discover-app/no-image.png'"
+                    onerror="this.src=getDefaultImage()"
                   />
                 </div>
                 <div class="credit-info p-3">

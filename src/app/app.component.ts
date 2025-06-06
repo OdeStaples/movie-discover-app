@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import * as SearchSelectors from './store/search/search.selectors';

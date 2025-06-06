@@ -11,8 +11,8 @@ import {
   faExternalLink,
 } from '@fortawesome/free-solid-svg-icons';
 import { faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
-
 import { MovieService } from '../../services/movie.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-people-detail',
@@ -26,8 +26,8 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
   private location = inject(Location);
   public movieService = inject(MovieService);
   private destroy$ = new Subject<void>();
+  prodEnv = environment.production;
 
-  // Font Awesome icons
   faStar = faStar;
   faUser = faUser;
   faExclamationTriangle = faExclamationTriangle;
@@ -36,7 +36,6 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
   faInstagram = faInstagram;
   faTwitter = faTwitter;
 
-  // Component state
   person: any = null;
   movieCredits: any = null;
   tvCredits: any = null;
@@ -47,17 +46,14 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
   activeTab = 'overview';
   showFullBio = false;
 
-  // Display state for tabs
   showAllMovies = false;
   showAllTV = false;
   showAllImages = false;
 
-  // Filter state
   movieCreditFilter: 'all' | 'cast' | 'crew' = 'all';
   tvCreditFilter: 'all' | 'cast' | 'crew' = 'all';
 
   ngOnInit(): void {
-    // Get person ID from route params
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       const id = +params['id'];
       if (id && !isNaN(id)) {
@@ -73,7 +69,6 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
     this.loading = true;
     this.error = false;
 
-    // Load person details, movie credits, TV credits, and images in parallel
     forkJoin({
       person: this.movieService.getPersonDetails(personId),
       movieCredits: this.movieService.getPersonMovieCredits(personId),
@@ -98,7 +93,6 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
       });
   }
 
-  // UI Methods
   setActiveTab(tab: string): void {
     this.activeTab = tab;
   }
@@ -126,7 +120,6 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
   }
 
   openImageModal(imagePath: string): void {
-    // Open image in new tab for now - you can implement a proper modal later
     const fullImageUrl = this.movieService.getImageUrl(imagePath, 'original');
     window.open(fullImageUrl, '_blank');
   }
@@ -139,7 +132,6 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
     this.location.back();
   }
 
-  // Person info methods
   getAge(): string | null {
     if (!this.person?.birthday) return null;
 
@@ -170,7 +162,6 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
 
   formatBiography(biography: string): string {
     if (!biography) return '';
-    // Convert line breaks to <br> tags and wrap paragraphs
     return biography
       .split('\n\n')
       .map((paragraph) => `<p>${paragraph.replace(/\n/g, '<br>')}</p>`)
@@ -180,14 +171,15 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
   getPersonPhotoUrl(): string {
     return this.person?.profile_path
       ? this.movieService.getImageUrl(this.person.profile_path, 'w500')
-      : '/movie-discover-app/no-image.png';
+      : this.prodEnv
+      ? '/movie-discover-app/no-image.png'
+      : '/no-image.png';
   }
 
   getKnownForBackdrop(): string | null {
     const knownFor = this.person?.known_for;
     if (!knownFor || knownFor.length === 0) return null;
 
-    // Find the most popular item with a backdrop
     const itemWithBackdrop = knownFor
       .filter((item: any) => item.backdrop_path)
       .sort((a: any, b: any) => (b.popularity || 0) - (a.popularity || 0))[0];
@@ -207,17 +199,18 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
   getKnownForImageUrl(posterPath: string): string {
     return posterPath
       ? this.movieService.getImageUrl(posterPath, 'w154')
+      : this.prodEnv
+      ? '/movie-discover-app/no-image.png'
       : '/no-image.png';
   }
 
-  // Credits methods
   getMovieCredits(): any[] {
     const cast = this.movieCredits?.cast || [];
     const crew = this.movieCredits?.crew || [];
     return [...cast, ...crew].sort((a, b) => {
       const dateA = a.release_date ? new Date(a.release_date).getTime() : 0;
       const dateB = b.release_date ? new Date(b.release_date).getTime() : 0;
-      return dateB - dateA; // Most recent first
+      return dateB - dateA;
     });
   }
 
@@ -259,7 +252,7 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
     return [...cast, ...crew].sort((a, b) => {
       const dateA = a.first_air_date ? new Date(a.first_air_date).getTime() : 0;
       const dateB = b.first_air_date ? new Date(b.first_air_date).getTime() : 0;
-      return dateB - dateA; // Most recent first
+      return dateB - dateA;
     });
   }
 
@@ -295,7 +288,6 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
     return this.showAllTV ? credits : credits.slice(0, 12);
   }
 
-  // Images methods
   getPersonImages(): any[] {
     return this.personImages?.profiles || [];
   }
@@ -305,7 +297,6 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
     return this.showAllImages ? images : images.slice(0, 8);
   }
 
-  // Helper Methods
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -317,5 +308,9 @@ export class PeopleDetailPage implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  getDefaultImage(): string {
+    return this.prodEnv ? '/movie-discover-app/no-image.png' : '/no-image.png';
   }
 }

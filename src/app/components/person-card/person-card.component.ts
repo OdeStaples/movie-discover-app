@@ -5,6 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faStar, faPlay, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Person } from '../../models/person.model';
 import { MovieService } from '../../services/movie.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-person-card',
@@ -24,6 +25,7 @@ export class PersonCardComponent {
   faUser = faUser;
 
   imageLoaded = false;
+  prodEnv = environment.production;
 
   onImageLoad() {
     this.imageLoaded = true;
@@ -59,6 +61,12 @@ export class PersonCardComponent {
   getPersonImage(): string {
     return this.person.profile_path
       ? `https://image.tmdb.org/t/p/w342${this.person.profile_path}`
-      : '/movie-discover-app/no-image.png';
+      : this.prodEnv
+      ? '/movie-discover-app/no-image.png'
+      : '/no-image.png';
+  }
+
+  getDefaultImage(): string {
+    return this.prodEnv ? '/movie-discover-app/no-image.png' : '/no-image.png';
   }
 }
