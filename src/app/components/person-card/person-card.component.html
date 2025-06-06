@@ -1,5 +1,4 @@
 <div class="person-card h-100" [class.hover-effect]="showQuickActions">
-  <!-- Person Photo -->
   <div class="photo-container position-relative">
     <img
       [src]="getPersonImage()"
@@ -8,10 +7,9 @@
       [class.loaded]="imageLoaded"
       (load)="onImageLoad()"
       (error)="onImageError($event)"
-      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNzUiIGN5PSI3NSIgcj0iNzUiIGZpbGw9IiMzQTNBM0EiLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjYwIiByPSIyNSIgZmlsbD0iIzY2NjY2NiIvPjxwYXRoIGQ9Ik0zMCAxMjBDMzAgMTA1IDUwIDk1IDc1IDk1Uzk1IDEwNSAxMjAgMTIwIiBmaWxsPSIjNjY2NjY2Ii8+PC9zdmc+'"
+      onerror="this.src='/movie-discover-app/no-image.png'"
     />
 
-    <!-- Loading overlay -->
     <div
       *ngIf="!imageLoaded"
       class="loading-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-secondary"
@@ -21,7 +19,6 @@
       </div>
     </div>
 
-    <!-- Quick Actions Overlay (shown on hover) -->
     <div
       *ngIf="showQuickActions"
       class="quick-actions-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
@@ -37,7 +34,6 @@
       </div>
     </div>
 
-    <!-- Popularity Badge -->
     <div class="popularity-badge position-absolute top-0 end-0 m-2">
       <span class="badge bg-warning text-dark d-flex align-items-center">
         <fa-icon [icon]="faStar" class="me-1"></fa-icon>
@@ -46,7 +42,6 @@
     </div>
   </div>
 
-  <!-- Person Info -->
   <div class="person-info p-3">
     <h6 class="person-name mb-2" [title]="person.name">
       {{ person.name }}
@@ -59,7 +54,6 @@
       </div>
     </div>
 
-    <!-- Known For (truncated) -->
     <p
       *ngIf="person.known_for && person.known_for.length > 0"
       class="known-for text-muted small mt-2 mb-0"
@@ -67,7 +61,6 @@
       Known for: {{ getTruncatedKnownFor() }}
     </p>
 
-    <!-- View Details Button (mobile) -->
     <button
       class="btn btn-outline-primary btn-sm w-100 mt-3 d-md-none"
       (click)="viewDetails($event)"
