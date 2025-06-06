@@ -63,13 +63,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
   updateSearchType(searchType: SearchType) {
     this.currentSearchType = searchType;
-    console.log('Current Search Type ->', searchType);
     this.updateSearchInput(this.currentSearchText);
   }
 
   updateSearchInput(searchText: string): void {
     this.currentSearchText = searchText;
-    // Only search if there's actual text
     if (searchText.trim().length > 0) {
       if (this.currentSearchType.toLowerCase() === 'person') {
         this.store.dispatch(SearchActions.searchPeople({ query: searchText }));
@@ -77,7 +75,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.store.dispatch(SearchActions.searchMovies({ query: searchText }));
       }
     } else {
-      // Clear results if search is empty
       this.store.dispatch(SearchActions.clearSearchResults());
     }
   }
@@ -91,10 +88,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (item.type === 'movie') {
       this.router.navigate(['/movie', item.id]);
     } else {
-      // For people, you could navigate to a person detail page
-      // Or show a modal with their filmography
-      console.log('Selected person:', item);
-      // this.router.navigate(['/person', item.id]);
+      this.router.navigate(['/person', item.id]);
     }
   }
 
