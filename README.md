@@ -139,7 +139,7 @@ export const environment = {
 ```
 src/
 ├── app/
-│   ├── components/           # Reusable UI components
+│   ├── components/           # UI components
 │   │   ├── header/
 │   │   ├── hero/
 │   │   ├── movie-card/
@@ -530,7 +530,8 @@ ng test --watch=false --browsers=ChromeHeadless
 - Effect API calls
 - Selector memoization
 
-**Coverage**
+**Coverage**:
+
 ![Test COverage](image.png)
 
 ### Mocking Strategy
