@@ -765,6 +765,6 @@ if (!environment.production) {
 
 ---
 
-**Last Updated**: December 2024  
+**Last Updated**: June 2025
 **Version**: 1.0.0  
-**Maintainer**: Development Team
+**Maintainer**: OdeStaples (Prabhu Prasad Pradhan)
