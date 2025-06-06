@@ -17,17 +17,14 @@ describe('Movie Selectors', () => {
   const mockMovies: Movie[] = [mockMovie];
 
   const mockMovieState: MovieState = {
-    // Popular movies
     popularMovies: mockMovies,
     popularMoviesLoading: false,
     popularMoviesError: null,
 
-    // Trending movies
     trendingMovies: mockMovies,
     trendingMoviesLoading: true,
     trendingMoviesError: 'Trending error',
 
-    // Movies by category/mood
     feelGoodMovies: mockMovies,
     actionMovies: [],
     mindBenderMovies: mockMovies,
@@ -35,12 +32,10 @@ describe('Movie Selectors', () => {
     categoryMoviesError: null,
     selectedCategory: 'feelGood',
 
-    // Selected movie details
     selectedMovie: mockMovie,
     selectedMovieLoading: false,
     selectedMovieError: null,
 
-    // Similar movies
     similarMovies: mockMovies,
     similarMoviesLoading: false,
     similarMoviesError: null,
@@ -281,7 +276,7 @@ describe('Movie Selectors', () => {
       const result1 = MovieSelectors.selectPopularMovies(mockAppState);
       const result2 = MovieSelectors.selectPopularMovies(mockAppState);
 
-      expect(result1).toBe(result2); // Same reference due to memoization
+      expect(result1).toBe(result2);
     });
 
     it('should memoize current category movies selector', () => {
@@ -323,7 +318,6 @@ describe('Movie Selectors', () => {
         movies: {
           popularMovies: mockMovies,
           popularMoviesLoading: false,
-          // Missing other properties
         } as any,
       };
 
@@ -380,18 +374,15 @@ describe('Movie Selectors', () => {
     });
 
     it('should handle switching between categories', () => {
-      // Initially feelGood is selected
       let result = MovieSelectors.selectCurrentCategoryMovies(mockAppState);
       expect(result).toEqual(mockMovies);
 
-      // Switch to action category (empty)
       const actionState = {
         movies: { ...mockMovieState, selectedCategory: 'action' as const },
       };
       result = MovieSelectors.selectCurrentCategoryMovies(actionState);
       expect(result).toEqual([]);
 
-      // Switch to mindBender category
       const mindBenderState = {
         movies: { ...mockMovieState, selectedCategory: 'mindBender' as const },
       };
@@ -404,19 +395,16 @@ describe('Movie Selectors', () => {
     it('should not recompute when unrelated state changes', () => {
       const spy = jasmine.createSpy('selector');
 
-      // Create a custom selector that calls our spy
       const testSelector = (state: any) => {
         spy();
         return MovieSelectors.selectPopularMovies(state);
       };
 
-      // Call selector multiple times with same state
       testSelector(mockAppState);
       testSelector(mockAppState);
       testSelector(mockAppState);
 
-      // Should only be called once due to memoization
-      expect(spy).toHaveBeenCalledTimes(3); // Actually called each time since it's not a real memoized selector
+      expect(spy).toHaveBeenCalledTimes(3);
     });
   });
 });

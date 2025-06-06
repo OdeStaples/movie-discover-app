@@ -3,13 +3,11 @@ import { MovieState } from './movies.model';
 
 export const selectMovieState = createFeatureSelector<MovieState>('movies');
 
-// Selected Category Selector
 export const selectSelectedCategory = createSelector(
   selectMovieState,
   (state) => state.selectedCategory
 );
 
-// Popular Movies Selectors
 export const selectPopularMovies = createSelector(
   selectMovieState,
   (state) => state.popularMovies
@@ -23,7 +21,6 @@ export const selectPopularMoviesError = createSelector(
   (state) => state.popularMoviesError
 );
 
-// Trending Movies Selectors
 export const selectTrendingMovies = createSelector(
   selectMovieState,
   (state) => state.trendingMovies
@@ -33,7 +30,6 @@ export const selectTrendingMoviesLoading = createSelector(
   (state) => state.trendingMoviesLoading
 );
 
-// Category Movies Selectors
 export const selectFeelGoodMovies = createSelector(
   selectMovieState,
   (state) => state.feelGoodMovies
@@ -55,7 +51,6 @@ export const selectCategoryMoviesError = createSelector(
   (state) => state.categoryMoviesError
 );
 
-// Selector for current category movies based on selected category
 export const selectCurrentCategoryMovies = createSelector(
   selectMovieState,
   (state) => {
@@ -72,7 +67,6 @@ export const selectCurrentCategoryMovies = createSelector(
   }
 );
 
-// Selected Movie Selectors
 export const selectSelectedMovie = createSelector(
   selectMovieState,
   (state) => state.selectedMovie
@@ -86,7 +80,6 @@ export const selectSelectedMovieError = createSelector(
   (state) => state.selectedMovieError
 );
 
-// Similar Movies Selectors
 export const selectSimilarMovies = createSelector(
   selectMovieState,
   (state) => state.similarMovies

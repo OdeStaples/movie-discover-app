@@ -14,7 +14,6 @@ export class SearchEffects {
     this.actions$.pipe(
       ofType(SearchActions.searchMovies),
       switchMap(({ query }) => {
-        // Return empty results for empty or whitespace-only queries
         if (!query || !query.trim()) {
           return of(SearchActions.searchMoviesSuccess({ movies: [] }));
         }

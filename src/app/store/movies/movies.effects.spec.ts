@@ -5,7 +5,6 @@ import { Action } from '@ngrx/store';
 import { MovieEffects } from './movies.effects';
 import { MovieService } from '../../services/movie.service';
 import * as MovieActions from './movies.actions';
-import { Movie } from '../../models/movie.model';
 import { cold, hot } from 'jasmine-marbles';
 import { mockMovie, mockApiResponse } from '../../mocks/app.mock';
 
@@ -327,7 +326,6 @@ describe('MovieEffects', () => {
 
       movieService.getPopularMovies.and.returnValue(response);
 
-      // The effect should still try to extract results, even if undefined
       effects.loadPopularMovies$.subscribe({
         next: (result) => {
           expect(result.type).toBe('[Movie] Load Popular Movies Success');

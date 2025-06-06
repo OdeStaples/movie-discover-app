@@ -11,6 +11,17 @@ export const mockMovie: Movie = {
   genre_ids: [28, 12],
 };
 
+export const mockMovie2: Movie = {
+  id: 2,
+  title: 'Test Movie 2',
+  overview: 'Test overview 2',
+  poster_path: '/test-poster2.jpg',
+  backdrop_path: '/test-backdrop2.jpg',
+  release_date: '2023-02-01',
+  vote_average: 7.8,
+  genre_ids: [35, 18],
+};
+
 export const mockPerson = {
   id: 1,
   name: 'Test Actor',

@@ -1,5 +1,4 @@
 import * as SearchActions from './search.actions';
-import { Movie } from '../../models/movie.model';
 import {
   mockActor,
   mockMovie,
