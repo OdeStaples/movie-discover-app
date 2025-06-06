@@ -1,5 +1,4 @@
 <div class="movie-card h-100" [class.hover-effect]="showQuickActions">
-  <!-- Movie Poster -->
   <div class="poster-container position-relative">
     <img
       [src]="getMovieImage()"
@@ -8,10 +7,9 @@
       [class.loaded]="imageLoaded"
       (load)="onImageLoad()"
       (error)="onImageError($event)"
-      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjQ1MCIgdmlld0JveD0iMCAwIDMwMCA0NTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSI0NTAiIGZpbGw9IiMzQTNBM0EiLz48cmVjdCB4PSIxMDAiIHk9IjE4MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgZmlsbD0iIzY2NjY2NiIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjI3MCIgcj0iMjAiIGZpbGw9IiM2NjY2NjYiLz48L3N2Zz4='"
+      onerror="this.src='/movie-discover-app/no-image.png'"
     />
 
-    <!-- Loading overlay -->
     <div
       *ngIf="!imageLoaded"
       class="loading-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-secondary"
@@ -21,7 +19,6 @@
       </div>
     </div>
 
-    <!-- Quick Actions Overlay (shown on hover) -->
     <div
       *ngIf="showQuickActions"
       class="quick-actions-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
@@ -46,7 +43,6 @@
       </div>
     </div>
 
-    <!-- Rating Badge -->
     <div class="rating-badge position-absolute top-0 end-0 m-2">
       <span class="badge bg-warning text-dark d-flex align-items-center">
         <fa-icon [icon]="faStar" class="me-1"></fa-icon>
@@ -54,7 +50,6 @@
       </span>
     </div>
 
-    <!-- Watchlist Heart (always visible on mobile) -->
     <div
       class="watchlist-heart position-absolute top-0 start-0 m-2 d-md-none"
       (click)="toggleWatchlist($event)"
@@ -70,7 +65,6 @@
     </div>
   </div>
 
-  <!-- Movie Info -->
   <div class="movie-info p-3">
     <h6 class="movie-title mb-2" [title]="movie.title">
       {{ movie.title }}
@@ -82,7 +76,6 @@
         <span>{{ getMovieYear() }}</span>
       </div>
 
-      <!-- Genres (if available) -->
       <div *ngIf="movie.genres && movie.genres.length > 0" class="genres">
         <span
           *ngFor="let genre of movie.genres.slice(0, 2); let last = last"
@@ -93,12 +86,10 @@
       </div>
     </div>
 
-    <!-- Overview (truncated) -->
     <p *ngIf="movie.overview" class="movie-overview text-muted small mt-2 mb-0">
       {{ getTruncatedOverview() }}
     </p>
 
-    <!-- View Details Button (mobile) -->
     <button
       class="btn btn-outline-primary btn-sm w-100 mt-3 d-md-none"
       (click)="viewDetails($event)"

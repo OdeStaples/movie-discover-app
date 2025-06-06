@@ -23,7 +23,6 @@ export class PersonCardComponent {
   faPlay = faPlay;
   faUser = faUser;
 
-  // Component state
   imageLoaded = false;
 
   onImageLoad() {
@@ -32,7 +31,6 @@ export class PersonCardComponent {
 
   onImageError(event: any) {
     this.imageLoaded = true;
-    // Fallback image will be handled by onerror attribute
   }
 
   viewDetails(event?: Event) {
@@ -44,7 +42,6 @@ export class PersonCardComponent {
   }
 
   getPopularityScore(): string {
-    // Convert popularity to a simpler 1-10 scale
     return Math.min(10, Math.round(this.person.popularity / 10)).toString();
   }
 
@@ -62,6 +59,6 @@ export class PersonCardComponent {
   getPersonImage(): string {
     return this.person.profile_path
       ? `https://image.tmdb.org/t/p/w342${this.person.profile_path}`
-      : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iNzUiIGN5PSI3NSIgcj0iNzUiIGZpbGw9IiMzQTNBM0EiLz48Y2lyY2xlIGN4PSI3NSIgY3k9IjYwIiByPSIyNSIgZmlsbD0iIzY2NjY2NiIvPjxwYXRoIGQ9Ik0zMCAxMjBDMzAgMTA1IDUwIDk1IDc1IDk1Uzk1IDEwNSAxMjAgMTIwIiBmaWxsPSIjNjY2NjY2Ii8+PC9zdmc+';
+      : '/movie-discover-app/no-image.png';
   }
 }

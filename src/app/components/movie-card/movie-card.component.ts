@@ -29,19 +29,16 @@ export class MovieCardComponent implements OnInit {
   @Input() movie!: Movie;
   @Input() showQuickActions = true;
 
-  // Font Awesome icons
   faHeart = faHeart;
   faHeartOutline = faHeartOutline;
   faStar = faStar;
   faPlay = faPlay;
   faCalendar = faCalendar;
 
-  // Component state
   imageLoaded = false;
   isInWatchlist = false;
 
   ngOnInit(): void {
-    // Check if movie is in watchlist
     this.store
       .select(WatchlistSelectors.selectIsInWatchlist(this.movie.id))
       .subscribe((inWatchlist) => {
@@ -55,7 +52,6 @@ export class MovieCardComponent implements OnInit {
 
   onImageError(event: any) {
     this.imageLoaded = true;
-    // Fallback image will be handled by onerror attribute
   }
 
   viewDetails(event?: Event) {
