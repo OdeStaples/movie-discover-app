@@ -123,7 +123,8 @@ http://localhost:4200
 ### Environment Setup
 
 1. Get TMDB API key from [The Movie Database](https://www.themoviedb.org/settings/api)
-2. Update `src/environments/environment.ts`:
+2. Update `src/environments/environment.ts`
+3. update the href in index file
 
 ```typescript
 export const environment = {
@@ -740,28 +741,6 @@ if (!environment.production) {
   enableDebugTools(appRef.components[0]);
 }
 ```
-
-## Future Enhancements
-
-### Planned Features
-
-- [ ] User authentication and profiles
-- [ ] Advanced filtering and sorting
-- [ ] Movie recommendations based on viewing history
-- [ ] Social sharing capabilities
-- [ ] Offline support with service workers
-- [ ] Advanced search with filters
-- [ ] Movie trailers with picture-in-picture
-- [ ] Dark/light theme toggle
-
-### Technical Improvements
-
-- [ ] Implement Progressive Web App (PWA)
-- [ ] Add internationalization (i18n)
-- [ ] Enhance accessibility (WCAG 2.1 AA)
-- [ ] Implement advanced caching strategies
-- [ ] Add performance monitoring
-- [ ] Upgrade to latest Angular version
 
 ---
 
