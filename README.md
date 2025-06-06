@@ -530,6 +530,9 @@ ng test --watch=false --browsers=ChromeHeadless
 - Effect API calls
 - Selector memoization
 
+**Coverage**
+![Test COverage](image.png)
+
 ### Mocking Strategy
 
 **HTTP Mocking**:
