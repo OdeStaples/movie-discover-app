@@ -1,0 +1,66 @@
+<section class="watchlist-section py-4 bg-dark">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="mb-2 d-flex align-items-center text-white">
+              <fa-icon [icon]="faHeart" class="text-danger me-2"></fa-icon>
+              Your Watchlist
+            </h3>
+            <p class="text-white mb-0">
+              {{ getSectionSubtitle() }}
+            </p>
+          </div>
+          <button
+            *ngIf="watchlistMovies.length > 6"
+            class="btn btn-outline-primary"
+            (click)="toggleViewAll()"
+          >
+            {{ showAll ? "Show Less" : "View All" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty Watchlist State -->
+    <div *ngIf="watchlistMovies.length === 0" class="row">
+      <div class="col-12">
+        <div class="empty-watchlist text-center py-5">
+          <div class="mb-3">
+            <fa-icon
+              [icon]="faHeart"
+              class="text-muted"
+              style="font-size: 4rem"
+            ></fa-icon>
+          </div>
+          <h4 class="text-muted mb-2">Your watchlist is empty</h4>
+          <p class="text-muted mb-4">
+            Start adding movies you want to watch by clicking the heart icon on
+            any movie card
+          </p>
+          <button class="btn btn-primary" (click)="exploreMovies()">
+            Explore Movies
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Watchlist Movies -->
+    <div *ngIf="watchlistMovies.length > 0" class="row">
+      <div
+        *ngFor="let movie of displayedMovies; let i = index"
+        class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4"
+        [style.animation-delay]="i * 100 + 'ms'"
+      >
+        <app-movie-card
+          [movie]="movie"
+          [showQuickActions]="true"
+          class="fade-in-up"
+        >
+        </app-movie-card>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,89 @@
+<section class="popular-people-section py-4 bg-light">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="mb-2 d-flex align-items-center">
+              <fa-icon [icon]="faUser" class="text-primary me-2"></fa-icon>
+              Popular Celebrities
+            </h3>
+            <p class="text-muted mb-0">
+              {{ getSectionSubtitle() }}
+            </p>
+          </div>
+          <button
+            *ngIf="people.length > 6"
+            class="btn btn-outline-primary"
+            (click)="toggleViewAll()"
+          >
+            {{ showAll ? "Show Less" : "View All" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-center align-items-center py-5">
+          <div class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status">
+              <span class="visually-hidden">Loading celebrities...</span>
+            </div>
+            <p class="text-muted">Loading popular celebrities...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="row">
+      <div class="col-12">
+        <div class="alert alert-warning text-center" role="alert">
+          <h5 class="alert-heading">Oops! Something went wrong</h5>
+          <p class="mb-2">Unable to load popular celebrities</p>
+          <button class="btn btn-outline-warning btn-sm" (click)="loadPeople()">
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- People Grid -->
+    <div *ngIf="!loading && !error && people.length > 0" class="row">
+      <div
+        *ngFor="let person of displayedPeople; let i = index"
+        class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 mb-4"
+        [style.animation-delay]="i * 100 + 'ms'"
+      >
+        <app-person-card
+          [person]="person"
+          [showQuickActions]="true"
+          class="fade-in-up"
+        >
+        </app-person-card>
+      </div>
+    </div>
+
+    <!-- No People State -->
+    <div *ngIf="!loading && !error && people.length === 0" class="row">
+      <div class="col-12">
+        <div class="text-center py-5">
+          <div class="mb-3">
+            <fa-icon
+              [icon]="faUser"
+              class="text-muted"
+              style="font-size: 4rem"
+            ></fa-icon>
+          </div>
+          <h4 class="text-muted mb-2">No celebrities found</h4>
+          <p class="text-muted">
+            We couldn't load any popular celebrities right now.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

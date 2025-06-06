@@ -1,1 +1,100 @@
-<p>movie-card works!</p>
+<div class="movie-card h-100" [class.hover-effect]="showQuickActions">
+  <div class="poster-container position-relative">
+    <img
+      [src]="getMovieImage()"
+      [alt]="movie.title"
+      class="movie-poster w-100"
+      [class.loaded]="imageLoaded"
+      (load)="onImageLoad()"
+      (error)="onImageError($event)"
+      onerror="this.src=getDefaultImage()"
+    />
+
+    <div
+      *ngIf="!imageLoaded"
+      class="loading-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-secondary"
+    >
+      <div class="spinner-border text-light" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div
+      *ngIf="showQuickActions"
+      class="quick-actions-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+    >
+      <div class="action-buttons">
+        <button
+          class="btn btn-primary btn-sm rounded-circle me-2"
+          (click)="viewDetails($event)"
+          title="View Details"
+        >
+          <fa-icon [icon]="faPlay"></fa-icon>
+        </button>
+        <button
+          class="btn btn-outline-light btn-sm rounded-circle"
+          [class.btn-danger]="isInWatchlist"
+          [class.btn-outline-light]="!isInWatchlist"
+          (click)="toggleWatchlist($event)"
+          [title]="isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'"
+        >
+          <fa-icon [icon]="isInWatchlist ? faHeart : faHeartOutline"></fa-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="rating-badge position-absolute top-0 end-0 m-2">
+      <span class="badge bg-warning text-dark d-flex align-items-center">
+        <fa-icon [icon]="faStar" class="me-1"></fa-icon>
+        {{ movie.vote_average | number : "1.1-1" }}
+      </span>
+    </div>
+
+    <div
+      class="watchlist-heart position-absolute top-0 start-0 m-2 d-md-none"
+      (click)="toggleWatchlist($event)"
+    >
+      <button
+        class="btn btn-sm"
+        [class.text-danger]="isInWatchlist"
+        [class.text-white]="!isInWatchlist"
+        style="background: rgba(0, 0, 0, 0.5); border: none"
+      >
+        <fa-icon [icon]="isInWatchlist ? faHeart : faHeartOutline"></fa-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="movie-info p-3">
+    <h6 class="movie-title mb-2" [title]="movie.title">
+      {{ movie.title }}
+    </h6>
+
+    <div class="movie-meta text-muted small">
+      <div class="d-flex align-items-center mb-1">
+        <fa-icon [icon]="faCalendar" class="me-1"></fa-icon>
+        <span>{{ getMovieYear() }}</span>
+      </div>
+
+      <div *ngIf="movie.genres && movie.genres.length > 0" class="genres">
+        <span
+          *ngFor="let genre of movie.genres.slice(0, 2); let last = last"
+          class="genre-tag"
+        >
+          {{ genre.name }}<span *ngIf="!last">, </span>
+        </span>
+      </div>
+    </div>
+
+    <p *ngIf="movie.overview" class="movie-overview text-muted small mt-2 mb-0">
+      {{ getTruncatedOverview() }}
+    </p>
+
+    <button
+      class="btn btn-outline-primary btn-sm w-100 mt-3 d-md-none"
+      (click)="viewDetails($event)"
+    >
+      View Details
+    </button>
+  </div>
+</div>

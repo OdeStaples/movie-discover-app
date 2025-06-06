@@ -1,1 +1,50 @@
-<router-outlet></router-outlet>
+<div class="app-wrapper bg-dark">
+  <div class="header-wrapper">
+    <app-header
+      [searchType]="currentSearchType"
+      [loading]="searchLoading$ | async"
+      [movieResults]="movieResults$ | async"
+      [actorResults]="actorResults$ | async"
+      [searchResults]="searchResults"
+      (currentSearch)="updateSearchInput($event)"
+      (searchTypeUpdate)="updateSearchType($event)"
+      (onClearSearch)="clearSearch()"
+      (selectedItem)="navigateToSelection($event)"
+      (redirectHome)="redirectToHome()"
+    />
+  </div>
+  <div class="content-wrapper">
+    <router-outlet></router-outlet>
+  </div>
+  <section class="footer-cta py-5 bg-dark text-white">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 text-center">
+          <h3 class="mb-3">Ready to Discover More?</h3>
+          <p class="text-light mb-4">
+            Explore thousands of movies, create your perfect watchlist, and
+            never run out of great content to watch.
+          </p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a
+              type="button"
+              class="btn btn-outline-light btn-sm py-2 px-5"
+              href="https://github.com/OdeStaples/movie-discover-app"
+              target="_blank"
+            >
+              <fa-icon [icon]="faGithub" class="me-2"></fa-icon> View souce code
+            </a>
+            <a
+              type="button"
+              class="btn btn-outline-light btn-sm py-2 px-5"
+              href="https://github.com/OdeStaples/movie-discover-app/issues"
+              target="_blank"
+            >
+              <fa-icon [icon]="faBug" class="me-2"></fa-icon> Report a bug
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

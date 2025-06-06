@@ -1,4 +1,3 @@
-// src/app/store/watchlist/watchlist.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import { Movie } from '../../models/movie.model';
 import * as WatchlistActions from './watchlist.actions';
@@ -7,7 +6,6 @@ export interface WatchlistState {
   movies: Movie[];
 }
 
-// Load from localStorage
 const loadWatchlistFromStorage = (): Movie[] => {
   try {
     const stored = localStorage.getItem('watchlist');
@@ -17,7 +15,6 @@ const loadWatchlistFromStorage = (): Movie[] => {
   }
 };
 
-// Save to localStorage
 const saveWatchlistToStorage = (movies: Movie[]): void => {
   try {
     localStorage.setItem('watchlist', JSON.stringify(movies));

@@ -13,6 +13,7 @@ import { SearchItem } from '../../models/search.model';
 import { SearchType } from '../../store/search/search.actions';
 import { Movie } from '../../models/movie.model';
 import { COMPARATORS, MOVIE_CONSTANTS } from '../../constants/movie.constants';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -29,6 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchText = '';
   showDropdown = false;
   selectedIndex = -1;
+  prodEnv = environment.production;
 
   @Input({ required: true }) searchType = 'movie';
   @Input() loading: boolean | null = false;
@@ -40,6 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Output() searchTypeUpdate = new EventEmitter<SearchType>();
   @Output() onClearSearch = new EventEmitter();
   @Output() selectedItem = new EventEmitter<SearchItem>();
+  @Output() redirectHome = new EventEmitter();
 
   ngOnInit() {
     // Set up debounced search
@@ -118,6 +121,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const imagePath = item.poster_path || item.profile_path;
     return imagePath
       ? `https://image.tmdb.org/t/p/w92${imagePath}`
+      : this.prodEnv
+      ? '/movie-discover-app/no-image.png'
       : '/no-image.png';
   }
 
@@ -133,5 +138,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } else {
       return 'Actor/Director';
     }
+  }
+
+  redirectToHome(): void {
+    this.redirectHome.emit();
+  }
+
+  getLogoPath(): string {
+    return this.prodEnv ? '/movie-discover-app/logo.svg' : '/logo.svg';
+  }
+
+  getDefaultImage(): string {
+    return this.prodEnv ? '/movie-discover-app/no-image.png' : '/no-image.png';
   }
 }

@@ -1,4 +1,3 @@
-// src/app/store/search/search.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import { Movie } from '../../models/movie.model';
 import * as SearchActions from './search.actions';
@@ -22,20 +21,6 @@ export const initialSearchState: SearchState = {
 export const searchReducer = createReducer(
   initialSearchState,
 
-  // on(SearchActions.setSearchType, (state, { searchType }) => ({
-  //   ...state,
-  //   searchType,
-  //   // Clear results when switching search type
-  //   movieResults: [],
-  //   actorResults: [],
-  //   error: null,
-  // })),
-
-  // on(SearchActions.setSearchQuery, (state, { query }) => ({
-  //   ...state,
-  //   query,
-  // })),
-
   on(SearchActions.searchMovies, SearchActions.searchPeople, (state) => ({
     ...state,
     loading: true,
@@ -45,7 +30,7 @@ export const searchReducer = createReducer(
   on(SearchActions.searchMoviesSuccess, (state, { movies }) => ({
     ...state,
     movieResults: movies,
-    actorResults: [], // Clear actor results when movie search succeeds
+    actorResults: [],
     loading: false,
     error: null,
   })),
@@ -53,7 +38,7 @@ export const searchReducer = createReducer(
   on(SearchActions.searchPeopleSuccess, (state, { actors }) => ({
     ...state,
     actorResults: actors,
-    movieResults: [], // Clear movie results when people search succeeds
+    movieResults: [],
     loading: false,
     error: null,
   })),

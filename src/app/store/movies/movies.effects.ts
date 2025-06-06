@@ -10,7 +10,6 @@ export class MovieEffects {
   private actions$ = inject(Actions);
   private moviesService = inject(MovieService);
 
-  // Genre IDs for categories
   private readonly genreIds = {
     feelGood: [35, 10751, 10749], // Comedy, Family, Romance
     action: [28, 53, 12], // Action, Thriller, Adventure
@@ -135,8 +134,4 @@ export class MovieEffects {
       )
     )
   );
-
-  // constructor(private actions$: Actions, private moviesService: MovieService) {
-
-  // }
 }

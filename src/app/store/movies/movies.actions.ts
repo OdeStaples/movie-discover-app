@@ -1,7 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Movie } from '../../models/movie.model';
 
-// Popular Movies Actions
 export const loadPopularMovies = createAction('[Movie] Load Popular Movies');
 export const loadPopularMoviesSuccess = createAction(
   '[Movie] Load Popular Movies Success',
@@ -12,7 +11,6 @@ export const loadPopularMoviesFailure = createAction(
   props<{ error: string }>()
 );
 
-// Trending Movies Actions
 export const loadTrendingMovies = createAction('[Movie] Load Trending Movies');
 export const loadTrendingMoviesSuccess = createAction(
   '[Movie] Load Trending Movies Success',
@@ -23,7 +21,11 @@ export const loadTrendingMoviesFailure = createAction(
   props<{ error: string }>()
 );
 
-// Category Movies Actions
+export const selectCategory = createAction(
+  '[Movie] Select Category',
+  props<{ category: 'feelGood' | 'action' | 'mindBender' }>()
+);
+
 export const loadFeelGoodMovies = createAction('[Movie] Load Feel Good Movies');
 export const loadActionMovies = createAction('[Movie] Load Action Movies');
 export const loadMindBenderMovies = createAction(
@@ -39,7 +41,6 @@ export const loadCategoryMoviesFailure = createAction(
   props<{ error: string }>()
 );
 
-// Movie Details Actions
 export const loadMovieDetails = createAction(
   '[Movie] Load Movie Details',
   props<{ movieId: number }>()
@@ -53,7 +54,6 @@ export const loadMovieDetailsFailure = createAction(
   props<{ error: string }>()
 );
 
-// Similar Movies Actions
 export const loadSimilarMovies = createAction(
   '[Movie] Load Similar Movies',
   props<{ movieId: number }>()
@@ -67,6 +67,5 @@ export const loadSimilarMoviesFailure = createAction(
   props<{ error: string }>()
 );
 
-// Clear Actions
 export const clearSelectedMovie = createAction('[Movie] Clear Selected Movie');
 export const clearSimilarMovies = createAction('[Movie] Clear Similar Movies');

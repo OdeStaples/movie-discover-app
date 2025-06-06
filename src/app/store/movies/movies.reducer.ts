@@ -5,7 +5,11 @@ import { createReducer, on } from '@ngrx/store';
 export const movieReducer = createReducer(
   initialMovieState,
 
-  // Popular Movies
+  on(MovieActions.selectCategory, (state, { category }) => ({
+    ...state,
+    selectedCategory: category,
+  })),
+
   on(MovieActions.loadPopularMovies, (state) => ({
     ...state,
     popularMoviesLoading: true,
@@ -23,7 +27,6 @@ export const movieReducer = createReducer(
     popularMoviesError: error,
   })),
 
-  // Trending Movies
   on(MovieActions.loadTrendingMovies, (state) => ({
     ...state,
     trendingMoviesLoading: true,
@@ -41,7 +44,6 @@ export const movieReducer = createReducer(
     trendingMoviesError: error,
   })),
 
-  // Category Movies
   on(
     MovieActions.loadFeelGoodMovies,
     MovieActions.loadActionMovies,
@@ -67,7 +69,6 @@ export const movieReducer = createReducer(
     categoryMoviesError: error,
   })),
 
-  // Movie Details
   on(MovieActions.loadMovieDetails, (state) => ({
     ...state,
     selectedMovieLoading: true,
@@ -85,7 +86,6 @@ export const movieReducer = createReducer(
     selectedMovieError: error,
   })),
 
-  // Similar Movies
   on(MovieActions.loadSimilarMovies, (state) => ({
     ...state,
     similarMoviesLoading: true,
@@ -103,7 +103,6 @@ export const movieReducer = createReducer(
     similarMoviesError: error,
   })),
 
-  // Clear Actions
   on(MovieActions.clearSelectedMovie, (state) => ({
     ...state,
     selectedMovie: null,
