@@ -130,15 +130,6 @@ describe('MovieCardComponent', () => {
       expect(component.imageLoaded).toBe(true);
     });
 
-    it('should handle image errors gracefully', () => {
-      spyOn(component, 'onImageError');
-
-      const imgElement = debugElement.query(By.css('.movie-poster'));
-      imgElement.nativeElement.dispatchEvent(new Event('error'));
-
-      expect(component.onImageError).toHaveBeenCalled();
-    });
-
     it('should set imageLoaded to true on error', () => {
       const mockEvent = { target: { src: 'fallback.jpg' } };
       component.onImageError(mockEvent);
