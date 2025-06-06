@@ -28,3 +28,27 @@ export const mockApiResponse: ApiResponse<Movie> = {
 };
 
 export const mockError = 'Test error message';
+
+export const mockActor = {
+  id: 1,
+  name: 'Test Actor',
+  profile_path: '/test-profile.jpg',
+  known_for_department: 'Acting',
+  popularity: 85.5,
+};
+
+export const mockQuery = 'test query';
+
+export const mockMovieResponse = {
+  page: 1,
+  results: [mockMovie],
+  total_pages: 1,
+  total_results: 1,
+};
+
+export const mockActorResponse = {
+  page: 1,
+  results: [mockActor],
+  total_pages: 1,
+  total_results: 1,
+};
