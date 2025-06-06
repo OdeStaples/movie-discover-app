@@ -26,3 +26,5 @@ export const mockApiResponse: ApiResponse<Movie> = {
   total_pages: 10,
   total_results: 100,
 };
+
+export const mockError = 'Test error message';
