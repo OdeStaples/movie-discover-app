@@ -124,7 +124,7 @@ http://localhost:4200
 
 1. Get TMDB API key from [The Movie Database](https://www.themoviedb.org/settings/api)
 2. Update `src/environments/environment.ts`
-3. update the href in index file
+3. Update the href in index file to `/`
 
 ```typescript
 export const environment = {
