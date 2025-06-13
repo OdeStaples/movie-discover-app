@@ -40,3 +40,18 @@
 .logo:hover{
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .app-title {
+    display: none;
+  }
+
+  .type-dropdown {
+    max-width: 70px;
+  } 
+
+  .search-container {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+  }
+}
